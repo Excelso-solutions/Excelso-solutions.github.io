@@ -22,48 +22,49 @@
             margin: 0 auto;
             padding: 40px 20px;
         }
-        header {
-            text-align: center;
-            margin-bottom: 60px;
-        }
-        h1 {
-            font-size: 2.8rem;
-            margin-bottom: 10px;
-            color: white;
-        }
-        .subtitle {
-            font-size: 1.3rem;
-            color: #888;
-        }
+        /* ==================== HEADER ==================== */
+header {
+    position: sticky;
+    top: 0;
+    z-index: 1100;
+    background: rgba(10, 10, 10, 0.97);
+    backdrop-filter: blur(12px);
+    padding: 25px 0 20px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(0, 180, 216, 0.25);
+    text-align: center;
+}
 
-        /* Навигация */
-        .toc {
-            position: sticky;
-            top: 20px;
-            background: #111;
-            padding: 20px;
-            border-radius: 16px;
-            margin-bottom: 60px;
-        }
-        .toc h3 {
-            margin-top: 0;
-            color: var(--primary);
-        }
-        .toc ul {
-            list-style: none;
-            padding: 0;
-        }
-        .toc a {
-            color: #ccc;
-            text-decoration: none;
-            display: block;
-            padding: 8px 12px;
-            border-radius: 8px;
-        }
-        .toc a:hover {
-            background: #1a1a1a;
-            color: white;
-        }
+/* ==================== TOC (МЕНЮ) ==================== */
+.toc {
+    position: sticky;
+    top: 95px;           /* ← Главное изменение: отступ под header */
+    z-index: 1000;
+    background: rgba(17, 17, 17, 0.96);
+    backdrop-filter: blur(12px);
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid rgba(0, 180, 216, 0.2);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Улучшаем ссылки в меню */
+.toc a {
+    padding: 10px 14px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+}
+
+.toc a:hover {
+    background: rgba(0, 180, 216, 0.15);
+    color: white;
+    padding-left: 18px;
+}
+
+/* Отступ для секций проектов */
+.project {
+    scroll-margin-top: 160px;   /* Увеличил, чтобы заголовок не прятался под меню */
+}
 
         /* Проекты */
         .project {
