@@ -23,6 +23,7 @@
             padding: 40px 20px;
         }
         /* ==================== HEADER ==================== */
+/* ==================== HEADER (закреплён) ==================== */
 header {
     position: sticky;
     top: 0;
@@ -35,17 +36,18 @@ header {
     text-align: center;
 }
 
-/* ==================== TOC (МЕНЮ) ==================== */
+/* ==================== TOC (НЕ закреплён) ==================== */
 .toc {
-    position: sticky;
-    top: 95px;           /* ← Главное изменение: отступ под header */
-    z-index: 1000;
-    background: rgba(17, 17, 17, 0.96);
-    backdrop-filter: blur(12px);
+    background: #111;
     padding: 20px;
     border-radius: 16px;
+    margin-bottom: 60px;
     border: 1px solid rgba(0, 180, 216, 0.2);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+/* Убираем sticky полностью */
+.toc {
+    position: static;   /* или можно вообще не указывать */
 }
 
 /* Улучшаем ссылки в меню */
