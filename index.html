@@ -1,90 +1,236 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excelso Solutions — Portfolio</title>
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+    
+    <style>
+        :root {
+            --primary: #00b4d8;
+        }
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0a0a0a;
+            color: #e0e0e0;
+            line-height: 1.7;
+        }
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+        .subtitle {
+            font-size: 1.3rem;
+            color: #888;
+        }
 
-<title>Excelso Solutions Portfolio</title>
+        /* Навигация */
+        .toc {
+            position: sticky;
+            top: 20px;
+            background: #111;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 60px;
+        }
+        .toc h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        .toc ul {
+            list-style: none;
+            padding: 0;
+        }
+        .toc a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            padding: 8px 12px;
+            border-radius: 8px;
+        }
+        .toc a:hover {
+            background: #1a1a1a;
+            color: white;
+        }
 
-<script type="module"
-src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js">
-</script>
+        /* Проекты */
+        .project {
+            margin-bottom: 140px;
+            scroll-margin-top: 80px;
+        }
+        .project h2 {
+            font-size: 2.2rem;
+            margin-bottom: 16px;
+            color: white;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 12px;
+        }
+        .description {
+            font-size: 1.1rem;
+            max-width: 900px;
+            margin-bottom: 40px;
+        }
 
-<style>
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+        .gallery-item {
+            position: relative;
+        }
+        .gallery-item img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+        .caption {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: #aaa;
+        }
 
-body{
-    margin:0;
-    font-family:Arial;
-    background:#111;
-    color:white;
-}
+        model-viewer {
+            width: 100%;
+            height: 620px;
+            background: #1a1a1a;
+            border-radius: 20px;
+            margin: 30px 0;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+        }
 
-.container{
-    max-width:1200px;
-    margin:auto;
-    padding:40px;
-}
-
-.project{
-    margin-bottom:100px;
-}
-
-.gallery{
-    display:flex;
-    gap:20px;
-    flex-wrap:wrap;
-}
-
-.gallery img{
-    width:300px;
-    border-radius:12px;
-}
-
-model-viewer{
-    width:100%;
-    height:600px;
-    background:#222;
-    border-radius:20px;
-    margin-top:20px;
-}
-
-</style>
-
+        .documents {
+            background: #111;
+            padding: 25px;
+            border-radius: 12px;
+        }
+        .documents h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+        .documents a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+        .documents a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <header>
+            <h1>Excelso Solutions</h1>
+            <p class="subtitle">Engineering solutions • Technologies • Specialized equipment</p>
+        </header>
 
-<div class="container">
+        <!-- Навигация по проектам -->
+        <div class="toc">
+            <h3>Projects</h3>
+            <ul id="toc-list"></ul>
+        </div>
 
-<h1>Excelso Solutions Portfolio</h1>
+        <!-- ==================== ПРОЕКТ 1 ==================== -->
+        <section class="project" id="project-1">
+            <h2>1. Flight Instrument Simulator Kit</h2>
+            <p class="description">
+                To design, develop, and manufacture a custom kit of flight instrument simulators from concept to final delivery. 
+                This was a comprehensive, full-cycle engineering project encompassing mechanical design, electronics development, embedded software, system integration, validation, and technical documentation.
+            </p>
 
-<div class="project">
+            <div class="gallery">
+                <div class="gallery-item">
+                    <img src="gallery/IMG_8874.JPEG" alt="Симулятор приборов">
+                    <div class="caption">Общий вид комплекта</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="gallery/IMG_8679.JPEG" alt="Панель приборов">
+                    <div class="caption">Панель управления</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="gallery/IMG_8831.JPEG" alt="Электроника">
+                    <div class="caption">Внутренняя электроника</div>
+                </div>
+                <div class="gallery-item">
+                    <img src="gallery/222C4D9B-DEE1-46B4-8641-A6795A4F588E.jpg" alt="3D модель">
+                    <div class="caption">3D визуализация</div>
+                </div>
+            </div>
 
-<h2>Flight Instrument Simulator Kit</h2>
+            <model-viewer 
+                src="models/lightcontrol.glb" 
+                camera-controls 
+                auto-rotate 
+                shadow-intensity="1"
+                exposure="0.8">
+            </model-viewer>
+            <p class="caption" style="text-align:center;">Интерактивная 3D-модель светового пульта управления</p>
 
-<p>
-To design, develop, and manufacture a custom kit of flight instrument simulators from concept to final delivery. This was a comprehensive, full-cycle engineering project encompassing mechanical design, electronics development, embedded software, system integration, validation, and technical documentation.
-</p>
+            <div class="documents">
+                <h3>Документация</h3>
+                <ul>
+                    <li><a href="docs/technical_specification.pdf" target="_blank">Техническое задание и спецификация</a></li>
+                    <li><a href="docs/user_manual.pdf" target="_blank">Руководство пользователя</a></li>
+                    <li><a href="docs/test_report.pdf" target="_blank">Отчёт об испытаниях</a></li>
+                </ul>
+            </div>
+        </section>
 
-<div class="gallery">
-    <img src="gallery/IMG_8874.JPEG">
-    <img src="gallery/IMG_8679.JPEG">
-    <img src="gallery/IMG_8831.JPEG">
-    <img src="gallery/222C4D9B-DEE1-46B4-8641-A6795A4F588E.jpg">
-    <img src="gallery/IMG_8795.JPEG">
-</div>
+        <!-- ==================== МЕСТА ДЛЯ ОСТАЛЬНЫХ 6 ПРОЕКТОВ ==================== -->
+        <!-- Повторите структуру ниже для проектов 2–7 -->
 
-<model-viewer
-src="models/lightcontrol.glb"
-camera-controls
-auto-rotate
-shadow-intensity="1">
-</model-viewer>
+        <section class="project" id="project-2">
+            <h2>2. Название второго проекта</h2>
+            <p class="description">Краткое, но ёмкое описание проекта...</p>
+            
+            <div class="gallery">
+                <!-- Добавьте изображения -->
+            </div>
 
-</div>
+            <model-viewer src="models/ваша_модель.glb" camera-controls auto-rotate></model-viewer>
+            <p class="caption" style="text-align:center;">Описание 3D-модели</p>
 
-</div>
+            <div class="documents">
+                <h3>Документация</h3>
+                <ul>
+                    <li><a href="docs/..." target="_blank">Название документа</a></li>
+                </ul>
+            </div>
+        </section>
 
+        <!-- Повторите блок выше для проектов 3, 4, 5, 6, 7 -->
+
+    </div>
+
+    <script>
+        // Автогенерация оглавления
+        const projects = document.querySelectorAll('.project h2');
+        const tocList = document.getElementById('toc-list');
+
+        projects.forEach((proj, index) => {
+            const id = `project-${index + 1}`;
+            proj.parentElement.id = id;
+
+            const li = document.createElement('li');
+            const a = document.createElement('a');
+            a.href = `#${id}`;
+            a.textContent = proj.textContent;
+            li.appendChild(a);
+            tocList.appendChild(li);
+        });
+    </script>
 </body>
 </html>
