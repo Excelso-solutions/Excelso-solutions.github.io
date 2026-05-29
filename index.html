@@ -149,24 +149,25 @@
             <p class="description">
                 To design, develop, and manufacture a custom kit of flight instrument simulators from concept to final delivery. 
                 This was a comprehensive, full-cycle engineering project encompassing mechanical design, electronics development, embedded software, system integration, validation, and technical documentation.
+                In total - 3 month for all scope of work. Project has been succesfully complet in accordance with budget, timing and technical requirments.
             </p>
 
             <div class="gallery">
                 <div class="gallery-item">
                     <img src="gallery/IMG_8874.JPEG" alt="Симулятор приборов">
-                    <div class="caption">Общий вид комплекта</div>
+                    <div class="caption">LampControlUnit bottom view</div>
                 </div>
                 <div class="gallery-item">
                     <img src="gallery/IMG_8679.JPEG" alt="Панель приборов">
-                    <div class="caption">Панель управления</div>
+                    <div class="caption">LampControlUnit PCB</div>
                 </div>
                 <div class="gallery-item">
                     <img src="gallery/IMG_8831.JPEG" alt="Электроника">
-                    <div class="caption">Внутренняя электроника</div>
+                    <div class="caption">LampControlUnit face glass</div>
                 </div>
                 <div class="gallery-item">
                     <img src="gallery/222C4D9B-DEE1-46B4-8641-A6795A4F588E.jpg" alt="3D модель">
-                    <div class="caption">3D визуализация</div>
+                    <div class="caption">LampControlUnit top view</div>
                 </div>
             </div>
 
@@ -177,14 +178,44 @@
                 shadow-intensity="1"
                 exposure="0.8">
             </model-viewer>
-            <p class="caption" style="text-align:center;">Интерактивная 3D-модель светового пульта управления</p>
+            <p class="caption" style="text-align:center;">control lamp unit</p>
+
+             <model-viewer 
+                src="models/lampcontrol_pcbstack.glb" 
+                camera-controls 
+                auto-rotate 
+                shadow-intensity="1"
+                exposure="0.8">
+            </model-viewer>
+            <p class="caption" style="text-align:center;">stack of printed circuit boards for a control lamp unit</p>
+
+             <model-viewer 
+                src="models/Anglecontrolunit.glb" 
+                camera-controls 
+                auto-rotate 
+                shadow-intensity="1"
+                exposure="0.8">
+            </model-viewer>
+            <p class="caption" style="text-align:center;">Indicator Angle of Attack and G-Force</p>
+
+             <model-viewer 
+                src="models/clock.glb" 
+                camera-controls 
+                auto-rotate 
+                shadow-intensity="1"
+                exposure="0.8">
+            </model-viewer>
+            <p class="caption" style="text-align:center;">Clock</p>
 
             <div class="documents">
                 <h3>Документация</h3>
                 <ul>
-                    <li><a href="docs/technical_specification.pdf" target="_blank">Техническое задание и спецификация</a></li>
-                    <li><a href="docs/user_manual.pdf" target="_blank">Руководство пользователя</a></li>
-                    <li><a href="docs/test_report.pdf" target="_blank">Отчёт об испытаниях</a></li>
+                    <li><a href="docs/Technical requirments lamps.pdf" target="_blank">Technical description for LampControlUnit</a></li>
+                    <li><a href="docs/Technical requirments UAP-6-3.pdf" target="_blank">Technical description for Indicator Angle of Attack and G-Forceя</a></li>
+                    <li><a href="docs/AO_diagrahm.pdf" target="_blank">Indicator Angle of Attack and G-Forceя connection and calibration</a></li>
+                    <li><a href="docs/Technical requirments ITE-2TB.pdf" target="_blank">Technical description for tachometer</a></li>
+                    <li><a href="docs/RPM_diagrahm.pdf" target="_blank">Tachometer calibration and connection</a></li>
+                    <li><a href="docs/Technical requirments CHAM-756.pdf" target="_blank">Technical description for clock</a></li>
                 </ul>
             </div>
         </section>
