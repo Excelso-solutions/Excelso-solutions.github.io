@@ -22,6 +22,37 @@
             margin: 0 auto;
             padding: 40px 20px;
         }
+        .contact-footer {
+            text-align: center;
+            margin: 100px 0 60px 0;
+            padding: 40px;
+            background: #111;
+            border-radius: 20px;
+            border: 1px solid #222;
+        }
+        .telegram-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #229ED9;
+            color: white;
+            padding: 16px 32px;
+            font-size: 1.18rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(34, 158, 217, 0.35);
+        }
+        .telegram-btn:hover {
+            background: #1a8ac4;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(34, 158, 217, 0.45);
+        }
+        .tg-icon {
+            font-size: 26px;
+            line-height: 1;
+        }
         /* ==================== HEADER ==================== */
 /* ==================== HEADER (закреплён) ==================== */
 header {
@@ -478,15 +509,13 @@ The project was not completed due to my relocation.</p>
         </section>
 
 <!-- ==================== Кнопка Telegram ==================== -->
-        <div class="contact-footer">
+      <div class="contact-footer">
             <a href="https://t.me/@verdilet" target="_blank" class="telegram-btn">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 11.944 0zm4.962 8.1-1.74 8.2c-.13.58-.48.72-.98.45L9.5 13.8l-2.3-.72c-.5-.16-.51-.5-.07-.74l3.1-3c.3-.3.6-.7.6-1.1s-.3-.8-.6-1.1z"/>
-                </svg>
-                Contact with me via Telegram
+                <span class="tg-icon">✈️</span>
+                Связаться в Telegram
             </a>
-            <p style="margin-top: 15px; color: #777; font-size: 0.95rem;">
-                I would be happy to discuss new projects and cooperation.
+            <p style="margin-top: 18px; color: #777; font-size: 0.97rem;">
+                Буду рад обсудить новые проекты и сотрудничество
             </p>
         </div>
         
