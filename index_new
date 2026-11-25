@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excelso Solutions — Engineering Portfolio</title>
+    <meta name="description" content="Engineering portfolio featuring mechanical design, electronics, embedded systems, engineering tools and SolidWorks automation.">
+
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #00b4d8;
+            --background: #0a0a0a;
+            --surface: #111;
+            --surface-light: #1a1a1a;
+            --border: #252525;
+            --text: #e0e0e0;
+            --muted: #aaa;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: var(--background);
+            color: var(--text);
+            line-height: 1.7;
+        }
+
+        a {
+            color: #00d4ff;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* HEADER */
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1100;
+            background: rgba(10, 10, 10, 0.97);
+            backdrop-filter: blur(12px);
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(0, 180, 216, 0.25);
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            color: white;
+        }
+
+        .subtitle {
+            margin: 5px 0 0;
+            color: var(--muted);
+        }
+
+        /* TABLE OF CONTENTS */
+
+        .toc {
+            background: var(--surface);
+            padding: 20px 25px;
+            border-radius: 16px;
+            margin-bottom: 60px;
+            border: 1px solid rgba(0, 180, 216, 0.2);
+        }
+
+        .toc h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .toc ul {
+            padding-left: 20px;
+            margin-bottom: 0;
+        }
+
+        .toc li {
+            margin: 7px 0;
+        }
+
+        .toc a {
+            color: #ccc;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .toc a:hover {
+            color: var(--primary);
+        }
+
+        /* PROJECT SECTIONS */
+
+        .project {
+            margin-bottom: 140px;
+            scroll-margin-top: 150px;
+        }
+
+        .project h2 {
+            font-size: 2.2rem;
+            margin-bottom: 16px;
+            color: white;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 12px;
+        }
+
+        .description {
+            font-size: 1.1rem;
+            max-width: 900px;
+            margin-bottom: 40px;
+            white-space: pre-line;
+        }
+
+        /* GALLERY */
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 50px;
+        }
+
+        .gallery-item {
+            position: relative;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+        }
+
+        .caption {
+            margin-top: 10px;
+            font-size: 0.95rem;
+            color: var(--muted);
+        }
+
+        /* 3D MODELS */
+
+        model-viewer {
+            width: 100%;
+            height: 620px;
+            background: var(--surface-light);
+            border-radius: 20px;
+            margin: 30px 0;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+        }
+
+        /* DOCUMENTATION */
+
+        .documents {
+            background: var(--surface);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+        }
+
+        .documents h3 {
+            margin-top: 0;
+            color: var(--primary);
+        }
+
+        .documents a {
+            color: #00d4ff;
+            text-decoration: none;
+        }
+
+        .documents a:hover {
+            text-decoration: underline;
+        }
+
+        /* ENGINEERING TOOLS */
+
+        .tool-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 35px;
+        }
+
+        .tool-card {
+            display: flex;
+            flex-direction: column;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: transform 0.25s, border-color 0.25s;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--primary);
+        }
+
+        .tool-preview {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            background: var(--surface-light);
+            object-fit: cover;
+        }
+
+        .tool-card-content {
+            padding: 25px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .tool-card h3 {
+            color: white;
+            margin: 0 0 12px;
+            font-size: 1.4rem;
+        }
+
+        .tool-card p {
+            color: #bbb;
+            margin: 0 0 20px;
+        }
+
+        .tool-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .tool-tag {
+            font-size: 0.82rem;
+            padding: 4px 10px;
+            border-radius: 20px;
+            background: rgba(0, 180, 216, 0.12);
+            color: #55dafa;
+            border: 1px solid rgba(0, 180, 216, 0.2);
+        }
+
+        .tool-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-top: auto;
+        }
+
+        .tool-button {
+            display: inline-block;
+            padding: 10px 17px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            text-align: center;
+            transition: background 0.2s;
+        }
+
+        .tool-button.primary {
+            background: var(--primary);
+            color: #061014;
+        }
+
+        .tool-button.primary:hover {
+            background: #36c9e8;
+        }
+
+        .tool-button.secondary {
+            border: 1px solid #444;
+            color: #ddd;
+        }
+
+        .tool-button.secondary:hover {
+            background: #222;
+        }
+
+        /* MACROS */
+
+        .macro-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 30px;
+            margin-top: 30px;
+        }
+
+        .macro-panel h3 {
+            color: var(--primary);
+            margin-top: 0;
+        }
+
+        .macro-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        /* CONTACT */
+
+        .contact-footer {
+            text-align: center;
+            margin: 100px 0 60px;
+            padding: 40px;
+            background: var(--surface);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .telegram-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: #229ED9;
+            color: white;
+            padding: 16px 32px;
+            font-size: 1.18rem;
+            font-weight: 600;
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(34, 158, 217, 0.35);
+        }
+
+        .telegram-btn:hover {
+            background: #1a8ac4;
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(34, 158, 217, 0.45);
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 700px) {
+            .container {
+                padding: 20px 14px;
+            }
+
+            header {
+                padding: 15px 0;
+            }
+
+            header h1 {
+                font-size: 1.6rem;
+            }
+
+            .subtitle {
+                font-size: 0.9rem;
+            }
+
+            .project h2 {
+                font-size: 1.6rem;
+            }
+
+            .project {
+                margin-bottom: 90px;
+                scroll-margin-top: 110px;
+            }
+
+            model-viewer {
+                height: 380px;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+            }
+
+            .tool-actions {
+                flex-direction: column;
+            }
+
+            .tool-button {
+                width: 100%;
+            }
+
+            .contact-footer {
+                padding: 25px 15px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<div class="container">
+
+    <header>
+        <h1>Excelso Solutions</h1>
+        <p class="subtitle">Engineering Solutions • Hardware • Embedded Systems • Mechanical Design</p>
+    </header>
+
+    <!-- TABLE OF CONTENTS -->
+
+    <div class="toc">
+        <h3>Contents</h3>
+        <ul id="toc-list"></ul>
+    </div>
+
+    <!-- ==================== PROJECT 1 ==================== -->
+
+    <section class="project" id="project-1">
+        <h2>1. Flight Instrument Simulator Kit</h2>
+
+        <p class="description">
+Full-cycle development and manufacturing of a custom kit of flight instrument simulators — from concept to final delivery to the client.
+
+The project included mechanical design, electronics development, embedded software, system integration, testing, and complete technical documentation.
+
+Duration: 3 months
+Result: Successfully completed on time, within budget, and in full compliance with technical requirements.
+        </p>
+
+        <div class="gallery">
+
+            <div class="gallery-item">
+                <img src="gallery/round.PNG" alt="AoA PCB layout">
+                <div class="caption">AoA PCB layout</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/round3d.PNG" alt="AoA PCB 3D representation">
+                <div class="caption">AoA PCB 3D representation</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_8668.JPG" alt="AoA PCB">
+                <div class="caption">AoA PCB</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_8826.JPEG" alt="AoA PCB assembly">
+                <div class="caption">AoA PCB assembly</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_8801.JPEG" alt="AoA mechanical assembly">
+                <div class="caption">AoA mechanical assembly</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/explode.PNG" alt="AoA exploded view">
+                <div class="caption">AoA exploded view</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_8882.JPEG" alt="Scale of parts">
+                <div class="caption">Scale of parts</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/scheme.PNG" alt="Light control unit schematic">
+                <div class="caption">Light control unit schematic</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/lightpcb.PNG" alt="Light control unit PCB layout">
+                <div class="caption">Light control unit PCB layout</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_8796.JPEG" alt="LampControlUnit PCB">
+                <div class="caption">LampControlUnit PCB</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/explodelight.PNG" alt="LampControlUnit exploded view">
+                <div class="caption">LampControlUnit exploded view</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_8874.JPEG" alt="LampControlUnit bottom view">
+                <div class="caption">LampControlUnit bottom view</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/222C4D9B-DEE1-46B4-8641-A6795A4F588E.jpg" alt="LampControlUnit top view">
+                <div class="caption">LampControlUnit top view</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_8831.JPEG" alt="LampControlUnit face glass">
+                <div class="caption">LampControlUnit face glass</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_8873.JPEG" alt="LampControlUnit assembly">
+                <div class="caption">LampControlUnit assembly</div>
+            </div>
+
+        </div>
+
+        <model-viewer
+            src="models/lightcontrol.glb"
+            camera-controls auto-rotate
+            shadow-intensity="1" exposure="0.8">
+        </model-viewer>
+        <p class="caption" style="text-align:center;">Control lamp unit</p>
+
+        <model-viewer
+            src="models/lampcontrol_pcbstack.glb"
+            camera-controls auto-rotate
+            shadow-intensity="1" exposure="0.8">
+        </model-viewer>
+        <p class="caption" style="text-align:center;">Stack of printed circuit boards for a control lamp unit</p>
+
+        <model-viewer
+            src="models/Anglecontrolunit.glb"
+            camera-controls auto-rotate
+            shadow-intensity="1" exposure="0.8">
+        </model-viewer>
+        <p class="caption" style="text-align:center;">Indicator Angle of Attack and G-Force</p>
+
+        <model-viewer
+            src="models/clock.glb"
+            camera-controls auto-rotate
+            shadow-intensity="1" exposure="0.8">
+        </model-viewer>
+        <p class="caption" style="text-align:center;">Clock</p>
+
+        <div class="documents">
+            <h3>Documentation</h3>
+            <ul>
+                <li><a href="docs/Technical requirments lamps.pdf" target="_blank">Technical description for LampControlUnit</a></li>
+                <li><a href="docs/Technical requirments UAP-6-3.pdf" target="_blank">Technical description for Indicator Angle of Attack and G-Force</a></li>
+                <li><a href="docs/AO_diagrahm.pdf" target="_blank">Indicator Angle of Attack and G-Force connection and calibration</a></li>
+                <li><a href="docs/Technical requirments ITE-2TB.pdf" target="_blank">Technical description for tachometer</a></li>
+                <li><a href="docs/RPM_diagrahm.pdf" target="_blank">Tachometer calibration and connection</a></li>
+                <li><a href="docs/Technical requirments CHAM-756.pdf" target="_blank">Technical description for clock</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- ==================== PROJECT 2 ==================== -->
+
+    <section class="project" id="project-2">
+        <h2>2. 3D Printer</h2>
+
+        <p class="description">3D printer reverse engineering.</p>
+
+        <div class="gallery">
+            <div class="gallery-item">
+                <img src="gallery/assy_render_preview.JPG" alt="3D printer visualisation">
+                <div class="caption">Visualisation of 3D printer</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/JJJJJ.JPG" alt="Lateral sliding unit">
+                <div class="caption">Lateral sliding unit</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/Capture.PNG" alt="3D printer model view">
+                <div class="caption">Model view</div>
+            </div>
+        </div>
+
+        <model-viewer src="models/assy_17.glb" camera-controls auto-rotate></model-viewer>
+        <p class="caption" style="text-align:center;">3D model of printer</p>
+    </section>
+
+    <!-- ==================== PROJECT 3 ==================== -->
+
+    <section class="project" id="project-3">
+        <h2>3. Design of Parts for Milling</h2>
+
+        <p class="description">
+Design of mechanical parts and preparation of full technical documentation for CNC milling manufacturing.
+        </p>
+
+        <div class="gallery">
+
+            <div class="gallery-item">
+                <img src="gallery/6994F854-E4AC-4D6B-8C69-9721D46F2AAC.jpg" alt="Small mechanical parts">
+                <div class="caption">Small parts</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/B448E54A-9BF4-45BF-85C7-39750167BD19.jpg" alt="Part 1">
+                <div class="caption">Part 1</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/8708E5FB-A5EF-4576-9C76-B4261632869C.jpg" alt="Part 2">
+                <div class="caption">Part 2</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_0037.JPEG" alt="Engine compartment part main view">
+                <div class="caption">Engine compartment part main view</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_0039.JPEG" alt="Engine compartment part side view">
+                <div class="caption">Engine compartment part side view</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_0038.JPEG" alt="Engine compartment part bottom view">
+                <div class="caption">Engine compartment part bottom view</div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==================== PROJECT 4 ==================== -->
+
+    <section class="project" id="project-4">
+        <h2>4. Smart Home Project</h2>
+
+        <p class="description">
+Development of a smart home automation system with the following functions:
+
+- Temperature monitoring and control
+- Door and window status monitoring and control
+- Discrete heating management
+- User notifications
+
+My contribution: Hardware design, firmware development, enclosure design.
+Duration: 2 months
+Team: 3 people
+
+The project was suspended due to changes in the client's requirements.
+        </p>
+
+        <div class="gallery">
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_2012.JPG" alt="First version of PCB">
+                <div class="caption">First version of PCB, totally handmade</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_2013.JPG" alt="First PCB after soldering">
+                <div class="caption">First PCB after soldering</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_2020.JPG" alt="Developed PCB and Raspberry Pi assembly">
+                <div class="caption">Developed PCB and RPi3 assembly</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_2119.JPG" alt="Second revision of PCB">
+                <div class="caption">Second revision of PCB</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_2188.JPG" alt="Assembly with case">
+                <div class="caption">Assembly with case</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_2220.JPG" alt="Final assembly">
+                <div class="caption">Final assembly</div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==================== PROJECT 5 ==================== -->
+
+    <section class="project" id="project-5">
+        <h2>5. CNC Cooling Control Board</h2>
+
+        <p class="description">
+Development of a control board for spindle temperature monitoring and cooling system on a CNC milling machine.
+
+My responsibilities:
+- PCB design considering tight space constraints inside the existing enclosure
+- Firmware development
+- Selection of external system components (pump, heat exchangers, valves, etc.)
+
+The project was not completed due to my relocation.
+        </p>
+
+        <div class="gallery">
+
+            <div class="gallery-item">
+                <img src="gallery/scheme.PNG" alt="CNC cooling control schematic">
+                <div class="caption">Schematic</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/cncpcblayout.PNG" alt="CNC cooling control PCB layout">
+                <div class="caption">PCB layout</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/cnccoolingpcb.PNG" alt="CNC cooling control PCB 3D representation">
+                <div class="caption">PCB 3D representation</div>
+            </div>
+
+        </div>
+
+        <model-viewer
+            src="models/coolingcontrol.glb"
+            camera-controls auto-rotate
+            shadow-intensity="1" exposure="0.8">
+        </model-viewer>
+
+        <p class="caption" style="text-align:center;">Cooling control unit</p>
+    </section>
+
+    <!-- ==================== PROJECT 6 ==================== -->
+
+    <section class="project" id="project-6">
+        <h2>6. Design and Manufacture of Propellers</h2>
+
+        <p class="description">
+Designing a propeller to meet the specified specifications.
+
+The resulting geometry was manufactured on a homemade CNC machine from solid ash, followed by hand machining and a final oil coating.
+        </p>
+
+        <div class="gallery">
+
+            <div class="gallery-item">
+                <img src="gallery/34C4B116-79F1-4896-9198-9F30394EECA2.jpg" alt="Propeller milling">
+                <div class="caption">Milling</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_6919.JPEG" alt="Propeller milling process">
+                <div class="caption">Milling</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/BDA8E81B-DB8D-41A2-BBA8-952C05AD42FD.jpg" alt="Propeller machining">
+                <div class="caption">Milling</div>
+            </div>
+
+        </div>
+
+        <model-viewer
+            src="models/propeller.glb"
+            camera-controls auto-rotate
+            shadow-intensity="1" exposure="0.8">
+        </model-viewer>
+
+        <p class="caption" style="text-align:center;">Propeller model for milling</p>
+    </section>
+
+    <!-- ==================== PROJECT 7 ==================== -->
+
+    <section class="project" id="project-7">
+        <h2>7. Design and Manufacture of a Wardrobe</h2>
+
+        <p class="description">
+Design and manufacture of a cabinet. The design features a large pull-out section. This technical solution was developed based on the cabinet's internal layout requirements.
+        </p>
+
+        <div class="gallery">
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_0843.JPEG" alt="Wardrobe">
+                <div class="caption">Wardrobe</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_0844.JPEG" alt="Wardrobe detail">
+                <div class="caption">Wardrobe</div>
+            </div>
+
+            <div class="gallery-item">
+                <img src="gallery/IMG_0845.JPEG" alt="Wardrobe detail">
+                <div class="caption">Wardrobe</div>
+            </div>
+
+        </div>
+
+        <model-viewer
+            src="models/furniture.glb"
+            camera-controls auto-rotate
+            shadow-intensity="1" exposure="0.8">
+        </model-viewer>
+
+        <p class="caption" style="text-align:center;">Wardrobe assembly</p>
+    </section>
+
+    <!-- ==================== ENGINEERING TOOLS ==================== -->
+
+    <section class="project" id="engineering-tools">
+        <h2>8. Engineering Tools</h2>
+
+        <p class="description">
+A collection of standalone engineering applications developed to support mechanical design and engineering calculations.
+
+Each tool is available online and can also be downloaded as a standalone HTML file. The source code can be inspected and adapted for individual engineering needs.
+        </p>
+
+        <div class="tool-grid">
+
+            <!-- THERMAL FIT CALCULATOR -->
+
+            <article class="tool-card">
+
+                <!--
+                Add a real screenshot later:
+                gallery/tools/thermal-fit-overview.png
+                -->
+
+                <div class="tool-preview"
+                     style="display:flex; align-items:center; justify-content:center; color:#55dafa; font-size:1.2rem;">
+                    THERMAL FIT CALCULATOR
+                </div>
+
+                <div class="tool-card-content">
+
+                    <h3>Thermal Fit Calculator</h3>
+
+                    <p>
+                        Shaft–Housing Thermal Clearance and Interference Analysis.
+
+                        A standalone engineering calculator for evaluating thermal expansion,
+                        clearance and interference conditions in cylindrical shaft–hole assemblies.
+                        Includes ISO fit tolerances, material properties, contact pressure,
+                        stress estimation and temperature-range visualization.
+                    </p>
+
+                    <div class="tool-tags">
+                        <span class="tool-tag">Thermal Expansion</span>
+                        <span class="tool-tag">ISO Fits</span>
+                        <span class="tool-tag">Contact Pressure</span>
+                        <span class="tool-tag">Stress Analysis</span>
+                    </div>
+
+                    <div class="tool-actions">
+                        <a class="tool-button primary"
+                           href="tools/thermal_fit.html"
+                           target="_blank"
+                           rel="noopener">
+                            Open Calculator
+                        </a>
+
+                        <a class="tool-button secondary"
+                           href="tools/thermal_fit.html"
+                           download="thermal_fit.html">
+                            Download HTML
+                        </a>
+                    </div>
+
+                </div>
+            </article>
+
+            <!-- FUTURE ENGINEERING TOOLS -->
+
+            <!--
+            Add future calculators as additional tool-card articles.
+            Each calculator should be a standalone HTML file in /tools/.
+            -->
+
+        </div>
+
+        <div class="documents" style="margin-top:30px;">
+            <h3>Calculation Model — Important Notes</h3>
+
+            <p>
+                The calculator uses a simplified analytical model based on isotropic,
+                linearly elastic cylindrical components and uniform temperature and
+                contact pressure assumptions.
+            </p>
+
+            <p>
+                Edge effects, surface roughness, axial loads, centrifugal forces,
+                creep and stress relaxation are not included. Results should be treated
+                as engineering estimates and independently verified for critical applications.
+            </p>
+        </div>
+    </section>
+
+    <!-- ==================== SOLIDWORKS MACROS ==================== -->
+
+    <section class="project" id="solidworks-macros">
+        <h2>9. SolidWorks Macros</h2>
+
+        <p class="description">
+A collection of SolidWorks automation tools developed to simplify repetitive CAD operations and improve engineering workflow efficiency.
+
+The repository provides compiled macro files and editable VBA source code, together with documentation and usage examples.
+        </p>
+
+        <div class="macro-panel">
+
+            <h3>SolidWorks Macro Repository</h3>
+
+            <p>
+                Each macro is published with its source code, compiled version,
+                description, requirements and usage instructions.
+            </p>
+
+            <ul>
+                <li>Compiled SolidWorks macros (.swp)</li>
+                <li>Editable VBA source code (.bas)</li>
+                <li>Usage instructions and technical documentation</li>
+                <li>Examples and screenshots</li>
+            </ul>
+
+            <div class="macro-links">
+
+                <a class="tool-button primary"
+                   href="https://github.com/Excelso-solutions/SolidWorks-Macros"
+                   target="_blank"
+                   rel="noopener">
+                    Browse SolidWorks Macros
+                </a>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ==================== CONTACT ==================== -->
+
+    <div class="contact-footer">
+
+        <a href="https://t.me/verdilet"
+           target="_blank"
+           rel="noopener"
+           class="telegram-btn">
+
+            <svg xmlns="http://www.w3.org/2000/svg"
+                 width="29"
+                 height="29"
+                 fill="currentColor"
+                 viewBox="0 0 24 24">
+
+                <path d="M23.91 3.79L20.3 20.84c-.25 1.21-.98 1.5-2 .94l-5.5-4.07-2.66 2.57c-.3.3-.55.56-1.1.56-.72 0-.6-.27-.84-.95L6.3 13.7l-5.45-1.7c-1.18-.35-1.19-1.16.26-1.75l21.26-8.2c.97-.43 1.9.24 1.53 1.73z"/>
+
+            </svg>
+
+            Contact via Telegram
+        </a>
+
+        <p style="margin-top:18px; color:#777; font-size:0.97rem;">
+            I would be happy to discuss new projects and cooperation.
+        </p>
+
+    </div>
+
+</div>
+
+<!-- ==================== TABLE OF CONTENTS SCRIPT ==================== -->
+
+<script>
+    const sections = document.querySelectorAll('.project');
+    const tocList = document.getElementById('toc-list');
+
+    sections.forEach(section => {
+        const heading = section.querySelector('h2');
+
+        if (!heading || !section.id) {
+            return;
+        }
+
+        const li = document.createElement('li');
+        const link = document.createElement('a');
+
+        link.href = `#${section.id}`;
+        link.textContent = heading.textContent;
+
+        li.appendChild(link);
+        tocList.appendChild(li);
+    });
+</script>
+
+</body>
+</html>
