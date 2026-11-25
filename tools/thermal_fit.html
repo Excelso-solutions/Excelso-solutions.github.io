@@ -1,0 +1,2181 @@
+<!doctype html>
+<html lang="ru"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Тепловые зазоры: вал – отверстие</title>
+<style>
+:root{--bg:#fff;--fg:#1c1c1c;--mut:#666;--bd:#ccc;--ac:#1f6feb;--warn:#b45309;--bad:#b91c1c;--ok:#15803d;--card:#f5f6f8}
+@media(prefers-color-scheme:dark){:root{--bg:#16181c;--fg:#e6e6e6;--mut:#9a9a9a;--bd:#3a3d44;--ac:#58a6ff;--warn:#f0b050;--bad:#f87171;--ok:#4ade80;--card:#1f2228}}
+*{box-sizing:border-box}body{margin:0;padding:12px;font:14px/1.45 system-ui,sans-serif;background:var(--bg);color:var(--fg)}
+h1{font-size:18px;margin:0 0 10px}h2{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--mut);margin:12px 0 6px}
+.wrap{max-width:1100px;margin:auto;display:grid;grid-template-columns:minmax(300px,420px) 1fr;gap:14px}@media(max-width:820px){.wrap{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:10px 12px}
+label{display:block;font-size:12px;color:var(--mut);margin-top:6px}
+input:disabled,select:disabled{opacity:.5}input,select,button,textarea{font:inherit;color:var(--fg);background:var(--bg);border:1px solid var(--bd);border-radius:5px;padding:4px 6px;max-width:100%}
+select{width:100%}input[type=text],input[type=number]{width:100%}
+.row{display:flex;gap:8px}.row>*{flex:1}.rd{display:flex;align-items:center;gap:6px;margin-top:6px;color:var(--fg);font-size:14px}.rd input{width:auto}
+button{cursor:pointer;background:var(--ac);color:#fff;border:0;padding:7px 14px}button.s{background:var(--bg);color:var(--fg);border:1px solid var(--bd);padding:4px 10px;font-size:12px}
+table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums}td,th{padding:3px 6px;border-bottom:1px solid var(--bd);text-align:right}td:first-child,th:first-child{text-align:left}
+.v{font-weight:600;margin:6px 0}.w{margin:4px 0;padding-left:8px;border-left:3px solid var(--bd)}.w.b{border-color:var(--bad)}.w.a{border-color:var(--warn)}.w.g{border-color:var(--ok)}.mut{color:var(--mut);font-size:12px}
+svg{width:100%;height:auto;display:block}
+.q{width:20px;height:20px;border-radius:50%;padding:0;font-size:12px;line-height:18px;background:var(--bg);color:var(--ac);border:1px solid var(--ac);text-transform:none;margin-left:6px;vertical-align:middle}.hp p{margin:4px 0}.hp code{font-size:12px}</style></head><body>
+<h1><span data-t="title">Тепловые зазоры в соединении вал – отверстие</span><span style="float:right"><button class="s" id="lru">RU</button> <button class="s" id="len">EN</button></span></h1>
+<div class="wrap">
+<div>
+ <div class="card"><h2 style="margin-top:0" data-t="shaft">Вал</h2>
+  <label data-t="dia">Диаметр, мм</label><input id="dS" type="text" value="20">
+  <label data-t="mat">Материал и состояние</label><select id="mS"></select>
+  <h2 data-t="hole">Отверстие</h2>
+  <label data-t="dia">Диаметр, мм</label><input id="dH" type="text" value="20">
+  <label data-t="mat">Материал и состояние</label><select id="mH"></select>
+  <div class="row"><div><label data-t="dout">Наружный Ø втулки, мм (пусто = 2×D)</label><input id="Do" type="text"></div><div><label data-t="dbore">Ø отверстия в валу, мм (0 = сплошной)</label><input id="di" type="text" value="0"></div></div>
+  <h2 data-t="tol">Допуски (для 20 °C)</h2>
+  <div class="rd"><input type="radio" name="md" id="r1" checked><label for="r1" data-t="fit" style="margin:0;color:var(--fg)">Посадка</label><input id="fit" type="text" value="H7/g6" style="width:110px"></div>
+  <div class="rd"><input type="radio" name="md" id="r2"><label for="r2" data-t="sep" style="margin:0;color:var(--fg)">Отдельно: отв.</label><select id="hL" style="width:62px"></select><select id="hG" style="width:68px"></select><span data-t="shw"> вал </span><select id="sL" style="width:62px"></select><select id="sG" style="width:68px"></select></div>
+  <div class="rd"><input type="radio" name="md" id="r3"><label for="r3" data-t="man" style="margin:0;color:var(--fg)">Вручную, мкм</label></div>
+  <div class="row"><div><label data-t="kES">ES отв.</label><input id="ES" type="text" value="21"></div><div><label data-t="kEI">EI отв.</label><input id="EI" type="text" value="0"></div><div><label data-t="kes">es вала</label><input id="es" type="text" value="-7"></div><div><label data-t="kei">ei вала</label><input id="ei" type="text" value="-20"></div></div>
+  <h2 data-t="temp">Температура, °C</h2>
+  <div class="row"><div><label data-t="tc">Расчётная</label><input id="T" type="text" value="120"></div><div><label data-t="t1">График от</label><input id="T1" type="text" value="-50"></div><div><label data-t="t2">до</label><input id="T2" type="text" value="250"></div></div>
+  <p><button id="go" data-t="go">Рассчитать</button></p>
+  <h2 data-t="lib">Библиотека материалов</h2>
+  <label class="s" style="display:inline-block;border:1px solid var(--bd);border-radius:5px;padding:4px 10px;cursor:pointer;margin:0"><span data-t="files">Файлы…</span><input id="ldf" type="file" accept=".txt" multiple hidden></label> <label class="s" style="display:inline-block;border:1px solid var(--bd);border-radius:5px;padding:4px 10px;cursor:pointer;margin:0"><span data-t="folder">Папка…</span><input id="ldd" type="file" webkitdirectory multiple hidden></label> <button class="s" id="tpl" data-t="tpl">Шаблон</button> <button class="s" id="rs" data-t="rst">Сброс</button>
+  <div class="mut" id="cnt"></div>
+ </div>
+</div>
+<div><div class="card" id="out"><span class="mut">Задайте данные и нажмите «Рассчитать».</span></div></div>
+</div>
+
+<script type="text/plain" id="lib">
+@@@ Al_01_d16t.txt
+# Д16Т (ГОСТ 4784) | T3/T4 (закалка + естественное старение)
+names: Д16Т (ГОСТ 4784) || AlCu4Mg1 = EN AW-2024 = AA 2024
+state: T3/T4 (закалка + естественное старение)
+state_en: T3/T4 (solution treated + natural aging)
+section: Al
+fric: AL
+alpha100: 22.9
+dalpha: 1.0
+tmin: -196
+tmax: 125
+tchg: 150
+potential: -0.69
+E: 72
+nu: 0.33
+Rp: 325
+note: Выше 150 °C перестаривание
+note_en: Overaging above 150 °C
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Al_02_d16t.txt
+# Д16Т (ГОСТ 4784) | T3/T4 + твёрдое анодирование
+names: Д16Т (ГОСТ 4784) || AlCu4Mg1 = EN AW-2024 = AA 2024
+state: T3/T4 + твёрдое анодирование
+state_en: T3/T4 + hard anodizing
+section: Al
+fric: AL_AN
+alpha100: 22.9
+dalpha: 1.0
+tmin: -196
+tmax: 125
+tchg: 150
+potential: -0.69
+E: 72
+nu: 0.33
+Rp: 325
+note: Оксидный слой может трескаться при больших перепадах T
+note_en: Oxide layer may crack under large temperature swings
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Al_03_v95.txt
+# В95 (ГОСТ 4784) | T6 (закалка + искусственное старение)
+names: В95 (ГОСТ 4784) || AlZn5.5MgCu = EN AW-7075 = AA 7075
+state: T6 (закалка + искусственное старение)
+state_en: T6 (solution treated + artificial aging)
+section: Al
+fric: AL
+alpha100: 23.6
+dalpha: 1.0
+tmin: -196
+tmax: 100
+tchg: 120
+potential: -0.75
+E: 71
+nu: 0.33
+Rp: 505
+note: Выше 100-120 °C резкая потеря прочности; коррозия под напряжением
+note_en: Sharp strength loss above 100-120 °C; stress corrosion cracking
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Al_04_amg6.txt
+# АМг6 (ГОСТ 4784) | H321 (нагартованный)
+names: АМг6 (ГОСТ 4784) || AlMg4.5Mn0.7 = EN AW-5083 = AA 5083
+state: H321 (нагартованный)
+state_en: H321 (strain-hardened)
+section: Al
+fric: AL
+alpha100: 23.8
+dalpha: 1.0
+tmin: -196
+tmax: 65
+tchg: -
+potential: -0.88
+E: 71
+nu: 0.33
+Rp: 215
+note: Выше 65 °C длительно - сенсибилизация (расслаивающая коррозия)
+note_en: Prolonged service above 65 °C: sensitization (exfoliation corrosion)
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Al_05_ad31.txt
+# АД31 (ГОСТ 4784) | T6 (закалка + искусственное старение)
+names: АД31 (ГОСТ 4784) || AlMgSi0.5 = EN AW-6063 = AA 6063
+state: T6 (закалка + искусственное старение)
+state_en: T6 (solution treated + artificial aging)
+section: Al
+fric: AL
+alpha100: 23.4
+dalpha: 1.0
+tmin: -196
+tmax: 120
+tchg: 150
+potential: -0.82
+E: 69
+nu: 0.33
+Rp: 160
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Al_06_ad33.txt
+# АД33 (ГОСТ 4784) | T6 (закалка + старение 160-175 °C)
+names: АД33 (ГОСТ 4784) || AlMg1SiCu = EN AW-6061 = AA 6061
+state: T6 (закалка + старение 160-175 °C)
+state_en: T6 (solution treated + aged at 160-175 °C)
+section: Al
+fric: AL
+alpha100: 23.6
+dalpha: 0.8
+tmin: -196
+tmax: 120
+tchg: 160
+potential: -0.80
+E: 69
+nu: 0.33
+Rp: 240
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Al_07_ad1.txt
+# АД1 (ГОСТ 4784) | O (отожжённый)
+names: АД1 (ГОСТ 4784) || Al99.5 = EN AW-1050A = AA 1050
+state: O (отожжённый)
+state_en: O (annealed)
+section: Al
+fric: AL
+alpha100: 23.6
+dalpha: 1.0
+tmin: -196
+tmax: 200
+tchg: -
+potential: -0.84
+E: 69
+nu: 0.33
+Rp: 30
+note: Очень мягкий
+note_en: Very soft
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Al_08_ak4-1.txt
+# АК4-1 (ГОСТ 4784) | T61 (старение 200 °C)
+names: АК4-1 (ГОСТ 4784) || AlCu2Mg1.5Ni = EN AW-2618A = AA 2618
+state: T61 (старение 200 °C)
+state_en: T61 (aged at 200 °C)
+section: Al
+fric: AL
+alpha100: 22.3
+dalpha: 1.0
+tmin: -196
+tmax: 200
+tchg: 200
+potential: -0.70
+E: 73
+nu: 0.33
+Rp: 370
+note: Жаропрочный
+note_en: Heat-resistant
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Al_09_ak12.txt
+# АК12 (АЛ2, ГОСТ 1583) | литьё
+names: АК12 (АЛ2, ГОСТ 1583) || EN AC-AlSi12(a) = EN AC-44200
+state: литьё
+state_en: cast
+section: Al
+fric: AL
+alpha100: 20.0
+dalpha: 0.8
+tmin: -196
+tmax: 200
+tchg: -
+potential: -0.82
+E: 75
+nu: 0.33
+Rp: 90
+note: Силумин, низкий КТР, износостойкий
+note_en: Silumin; low CTE, wear-resistant
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Al_10_ak9ch.txt
+# АК9ч (АЛ4, ГОСТ 1583) | T6 (закалка + старение)
+names: АК9ч (АЛ4, ГОСТ 1583) || EN AC-AlSi9Mg = EN AC-43300
+state: T6 (закалка + старение)
+state_en: T6 (solution treated + aged)
+section: Al
+fric: AL
+alpha100: 21.0
+dalpha: 0.8
+tmin: -196
+tmax: 150
+tchg: 160
+potential: -0.80
+E: 75
+nu: 0.33
+Rp: 210
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Cu_01_m1.txt
+# М1 (ГОСТ 859) | отожжённая
+names: М1 (ГОСТ 859) || Cu-ETP = CW004A (EN 1976) = C11000 (UNS/ASTM)
+state: отожжённая
+state_en: annealed
+section: Cu
+fric: CU
+alpha100: 17.0
+dalpha: 0.45
+tmin: -196
+tmax: 200
+tchg: -
+potential: -0.34
+E: 117
+nu: 0.34
+Rp: 60
+note: Мягкая, налипает
+note_en: Soft, prone to adhesion
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Cu_02_l63.txt
+# Л63 (ГОСТ 15527) | полутвёрдая (нагартованная)
+names: Л63 (ГОСТ 15527) || CuZn37 = CW508L (EN 12163) = C27200 (UNS/ASTM)
+state: полутвёрдая (нагартованная)
+state_en: half-hard (cold-worked)
+section: Cu
+fric: BRS
+alpha100: 20.0
+dalpha: 0.45
+tmin: -196
+tmax: 200
+tchg: 250
+potential: -0.33
+E: 105
+nu: 0.35
+Rp: 250
+note: Нагартовка снимается от 250 °C; сезонное растрескивание
+note_en: Work hardening is lost from 250 °C; season cracking
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Cu_03_ls59-1.txt
+# ЛС59-1 (ГОСТ 15527) | полутвёрдая
+names: ЛС59-1 (ГОСТ 15527) || CuZn39Pb2 = CW612N (EN 12164)
+state: полутвёрдая
+state_en: half-hard
+section: Cu
+fric: BRS
+alpha100: 20.0
+dalpha: 0.45
+tmin: -196
+tmax: 200
+tchg: 250
+potential: -0.33
+E: 100
+nu: 0.35
+Rp: 250
+note: Свинцовистая
+note_en: Leaded
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Cu_04_bro10f1.txt
+# БрО10Ф1 (ГОСТ 613) | литьё
+names: БрО10Ф1 (ГОСТ 613) || CuSn10P1 = CC480K (EN 1982) || C90700 (ASTM B505)
+state: литьё
+state_en: cast
+section: Cu
+fric: BRZ
+alpha100: 17.1
+dalpha: 0.5
+tmin: -196
+tmax: 250
+tchg: -
+potential: -0.31
+E: 105
+nu: 0.34
+Rp: 150
+note: Антифрикционная, подшипники скольжения
+note_en: Antifriction, plain bearings
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Cu_05_bro5c5s5.txt
+# БрО5Ц5С5 (ГОСТ 613) | литьё
+names: БрО5Ц5С5 (ГОСТ 613) || CuSn5Zn5Pb5 = CC491K (EN 1982) = C83600 (ASTM B584)
+state: литьё
+state_en: cast
+section: Cu
+fric: BRZ
+alpha100: 18.0
+dalpha: 0.5
+tmin: -196
+tmax: 250
+tchg: -
+potential: -0.31
+E: 95
+nu: 0.34
+Rp: 100
+note: Антифрикционная
+note_en: Antifriction
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Cu_06_brazh9-4.txt
+# БрАЖ9-4 (ГОСТ 493) | литьё
+names: БрАЖ9-4 (ГОСТ 493) || C95200 (ASTM B148)
+state: литьё
+state_en: cast
+section: Cu
+fric: BRZ
+alpha100: 17.0
+dalpha: 0.5
+tmin: -196
+tmax: 300
+tchg: -
+potential: -0.33
+E: 110
+nu: 0.33
+Rp: 200
+note: Прочная, износостойкая
+note_en: Strong, wear-resistant
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Cu_07_brazhn10-4-4.txt
+# БрАЖН10-4-4 (ГОСТ 493) | литьё
+names: БрАЖН10-4-4 (ГОСТ 493) || CuAl10Fe5Ni5-C = CC333G (EN 1982) = C95500 (ASTM B148)
+state: литьё
+state_en: cast
+section: Cu
+fric: BRZ
+alpha100: 17.0
+dalpha: 0.5
+tmin: -196
+tmax: 400
+tchg: -
+potential: -0.33
+E: 120
+nu: 0.33
+Rp: 280
+note: Жаропрочная антифрикционная
+note_en: Heat-resistant antifriction
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Cu_08_brb2.txt
+# БрБ2 (ГОСТ 18175) | закалка + старение 320 °C, 38-42 HRC
+names: БрБ2 (ГОСТ 18175) || CuBe2 = CW101C (EN 12163) = C17200 (UNS/ASTM)
+state: закалка + старение 320 °C, 38-42 HRC
+state_en: solution treated + aged at 320 °C, 38-42 HRC
+section: Cu
+fric: BRZ
+alpha100: 17.0
+dalpha: 0.5
+tmin: -196
+tmax: 200
+tchg: 280
+potential: -0.33
+E: 130
+nu: 0.3
+Rp: 1000
+note: Выше ~250 °C релаксация
+note_en: Relaxation above ~250 °C
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Cu_09_brh1.txt
+# БрХ1 (ГОСТ 18175) | закалка + старение 450 °C
+names: БрХ1 (ГОСТ 18175) || CuCr1 = CW105C (EN 12163) = C18200 (UNS/ASTM)
+state: закалка + старение 450 °C
+state_en: solution treated + aged at 450 °C
+section: Cu
+fric: CU
+alpha100: 17.0
+dalpha: 0.45
+tmin: -196
+tmax: 300
+tchg: 400
+potential: -0.34
+E: 130
+nu: 0.33
+Rp: 340
+note: Высокая тепло- и электропроводность
+note_en: High thermal and electrical conductivity
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_01_st3sp.txt
+# Ст3сп (ГОСТ 380) | горячекатаное
+names: Ст3сп (ГОСТ 380) || S235JR = 1.0038 (EN 10025-2)
+state: горячекатаное
+state_en: hot-rolled
+section: Fe
+fric: STEEL_S
+alpha100: 11.7
+dalpha: 0.55
+tmin: -20
+tmax: 400
+tchg: -
+potential: -0.65
+E: 210
+nu: 0.3
+Rp: 235
+note: Хладноломкость ниже -20 °C
+note_en: Cold brittleness below -20 °C
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_02_stal-20.txt
+# Сталь 20 (ГОСТ 1050) | нормализация
+names: Сталь 20 (ГОСТ 1050) || C22E = 1.1151 (EN 10083-2) || 1020 (AISI/SAE)
+state: нормализация
+state_en: normalized
+section: Fe
+fric: STEEL_S
+alpha100: 11.5
+dalpha: 0.55
+tmin: -40
+tmax: 425
+tchg: -
+potential: -0.65
+E: 210
+nu: 0.3
+Rp: 245
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_03_stal-20h.txt
+# Сталь 20Х (ГОСТ 4543) | цементация + закалка + низкий отпуск 180 °C, 58-62 HRC
+names: Сталь 20Х (ГОСТ 4543) || 20Cr4 = 1.7027 (EN 10084) || 5120 (AISI/SAE)
+state: цементация + закалка + низкий отпуск 180 °C, 58-62 HRC
+state_en: carburized + quenched + low-temperature temper 180 °C, 58-62 HRC
+section: Fe
+fric: STEEL_H
+alpha100: 11.5
+dalpha: 0.55
+tmin: -40
+tmax: 150
+tchg: 180
+potential: -0.65
+E: 210
+nu: 0.3
+Rp: 700
+note: Выше температуры отпуска твёрдость слоя падает
+note_en: Above the tempering temperature the case hardness drops
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_04_stal-45.txt
+# Сталь 45 (ГОСТ 1050) | нормализация
+names: Сталь 45 (ГОСТ 1050) || C45 = 1.0503 (EN 10083-2) || 1045 (AISI/SAE)
+state: нормализация
+state_en: normalized
+section: Fe
+fric: STEEL_S
+alpha100: 11.6
+dalpha: 0.55
+tmin: -40
+tmax: 400
+tchg: -
+potential: -0.65
+E: 210
+nu: 0.3
+Rp: 355
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_05_stal-45.txt
+# Сталь 45 (ГОСТ 1050) | улучшение (закалка + отпуск 550-600 °C)
+names: Сталь 45 (ГОСТ 1050) || C45 = 1.0503 (EN 10083-2) || 1045 (AISI/SAE)
+state: улучшение (закалка + отпуск 550-600 °C)
+state_en: quenched and tempered (Q&T) at 550-600 °C
+section: Fe
+fric: STEEL_S
+alpha100: 11.6
+dalpha: 0.55
+tmin: -40
+tmax: 400
+tchg: 500
+potential: -0.65
+E: 210
+nu: 0.3
+Rp: 650
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_06_stal-45.txt
+# Сталь 45 (ГОСТ 1050) | закалка + низкий отпуск 200 °C, 42-48 HRC
+names: Сталь 45 (ГОСТ 1050) || C45 = 1.0503 (EN 10083-2) || 1045 (AISI/SAE)
+state: закалка + низкий отпуск 200 °C, 42-48 HRC
+state_en: quenched + low-temperature temper 200 °C, 42-48 HRC
+section: Fe
+fric: STEEL_H
+alpha100: 11.6
+dalpha: 0.55
+tmin: -40
+tmax: 150
+tchg: 180
+potential: -0.65
+E: 210
+nu: 0.3
+Rp: 1000
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_07_stal-40h.txt
+# Сталь 40Х (ГОСТ 4543) | улучшение (закалка + отпуск 550 °C)
+names: Сталь 40Х (ГОСТ 4543) || 41Cr4 = 1.7035 (EN 10083-3) || 5140 (AISI/SAE)
+state: улучшение (закалка + отпуск 550 °C)
+state_en: quenched and tempered (Q&T) at 550 °C
+section: Fe
+fric: STEEL_S
+alpha100: 11.9
+dalpha: 0.55
+tmin: -40
+tmax: 400
+tchg: 500
+potential: -0.65
+E: 210
+nu: 0.3
+Rp: 785
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_08_stal-40h.txt
+# Сталь 40Х (ГОСТ 4543) | закалка + низкий отпуск 200 °C, 48-52 HRC
+names: Сталь 40Х (ГОСТ 4543) || 41Cr4 = 1.7035 (EN 10083-3) || 5140 (AISI/SAE)
+state: закалка + низкий отпуск 200 °C, 48-52 HRC
+state_en: quenched + low-temperature temper 200 °C, 48-52 HRC
+section: Fe
+fric: STEEL_H
+alpha100: 11.9
+dalpha: 0.55
+tmin: -40
+tmax: 150
+tchg: 180
+potential: -0.65
+E: 210
+nu: 0.3
+Rp: 1200
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_09_stal-40hn2ma.txt
+# Сталь 40ХН2МА (ГОСТ 4543) | улучшение (закалка + отпуск 550-600 °C)
+names: Сталь 40ХН2МА (ГОСТ 4543) || 34CrNiMo6 = 1.6582 (EN 10083-3) || 4340 (AISI/SAE)
+state: улучшение (закалка + отпуск 550-600 °C)
+state_en: quenched and tempered (Q&T) at 550-600 °C
+section: Fe
+fric: STEEL_S
+alpha100: 11.5
+dalpha: 0.55
+tmin: -60
+tmax: 400
+tchg: 520
+potential: -0.65
+E: 210
+nu: 0.3
+Rp: 930
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_10_stal-38h2myua.txt
+# Сталь 38Х2МЮА (ГОСТ 4543) | азотирование 500-520 °C, 900-1000 HV
+names: Сталь 38Х2МЮА (ГОСТ 4543) || 41CrAlMo7-10 = 1.8509 (EN 10085)
+state: азотирование 500-520 °C, 900-1000 HV
+state_en: nitrided at 500-520 °C, 900-1000 HV
+section: Fe
+fric: STEEL_H
+alpha100: 12.0
+dalpha: 0.55
+tmin: -40
+tmax: 400
+tchg: 500
+potential: -0.65
+E: 210
+nu: 0.3
+Rp: 835
+note: Азотированный слой тонкий и хрупкий
+note_en: Nitrided layer is thin and brittle
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_11_stal-65g.txt
+# Сталь 65Г (ГОСТ 14959) | закалка + отпуск 450 °C (пружинная)
+names: Сталь 65Г (ГОСТ 14959)
+state: закалка + отпуск 450 °C (пружинная)
+state_en: quenched + tempered at 450 °C (spring)
+section: Fe
+fric: STEEL_H
+alpha100: 11.5
+dalpha: 0.55
+tmin: -40
+tmax: 200
+tchg: 400
+potential: -0.65
+E: 210
+nu: 0.3
+Rp: 800
+note: Выше 200 °C релаксация пружин
+note_en: Spring relaxation above 200 °C
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_12_shh15.txt
+# ШХ15 (ГОСТ 801) | закалка + низкий отпуск 160 °C, 60-64 HRC
+names: ШХ15 (ГОСТ 801) || 100Cr6 = 1.3505 (EN ISO 683-17) = 52100 (AISI/SAE)
+state: закалка + низкий отпуск 160 °C, 60-64 HRC
+state_en: quenched + low-temperature temper 160 °C, 60-64 HRC
+section: Fe
+fric: STEEL_H
+alpha100: 12.0
+dalpha: 0.55
+tmin: -60
+tmax: 120
+tchg: 150
+potential: -0.65
+E: 210
+nu: 0.3
+Rp: 1700
+note: Стандартные подшипниковые кольца до 120 °C, выше нужна термостабилизация
+note_en: Standard bearing rings up to 120 °C; above that heat-stabilized rings are needed
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_13_r6m5.txt
+# Р6М5 (ГОСТ 19265) | закалка + тройной отпуск 560 °C, 62-65 HRC
+names: Р6М5 (ГОСТ 19265) || HS6-5-2C = 1.3343 (EN ISO 4957) = M2 (AISI/ASTM)
+state: закалка + тройной отпуск 560 °C, 62-65 HRC
+state_en: quenched + triple temper 560 °C, 62-65 HRC
+section: Fe
+fric: STEEL_H
+alpha100: 11.0
+dalpha: 0.3
+tmin: -40
+tmax: 500
+tchg: 550
+potential: -0.65
+E: 215
+nu: 0.3
+Rp: 2200
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_14_08h18n10.txt
+# 08Х18Н10 (ГОСТ 5632) | аустенитная, закалка на твёрдый раствор
+names: 08Х18Н10 (ГОСТ 5632) || X5CrNi18-10 = 1.4301 (EN 10088) = 304 (AISI)
+state: аустенитная, закалка на твёрдый раствор
+state_en: austenitic, solution annealed
+section: Fe
+fric: SS_A
+alpha100: 17.3
+dalpha: 0.25
+tmin: -196
+tmax: 800
+tchg: 450
+potential: -0.08
+E: 195
+nu: 0.3
+Rp: 205
+note: Выдержка 450-850 °C: сенсибилизация (МКК); склонна к задирам
+note_en: Holding at 450-850 °C: sensitization (intergranular corrosion); prone to galling
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_15_12h18n10t.txt
+# 12Х18Н10Т (ГОСТ 5632) | аустенитная, закалка на твёрдый раствор
+names: 12Х18Н10Т (ГОСТ 5632) || X6CrNiTi18-10 = 1.4541 (EN 10088) = 321 (AISI)
+state: аустенитная, закалка на твёрдый раствор
+state_en: austenitic, solution annealed
+section: Fe
+fric: SS_A
+alpha100: 16.6
+dalpha: 0.25
+tmin: -196
+tmax: 600
+tchg: -
+potential: -0.08
+E: 195
+nu: 0.3
+Rp: 205
+note: Склонна к задирам
+note_en: Prone to galling
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_16_03h17n14m3.txt
+# 03Х17Н14М3 (ГОСТ 5632) | аустенитная, закалка на твёрдый раствор
+names: 03Х17Н14М3 (ГОСТ 5632) || X2CrNiMo17-12-2 = 1.4404 (EN 10088) = 316L (AISI)
+state: аустенитная, закалка на твёрдый раствор
+state_en: austenitic, solution annealed
+section: Fe
+fric: SS_A
+alpha100: 16.0
+dalpha: 0.25
+tmin: -196
+tmax: 800
+tchg: -
+potential: -0.05
+E: 195
+nu: 0.3
+Rp: 175
+note: Склонна к задирам
+note_en: Prone to galling
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_17_20h13.txt
+# 20Х13 (ГОСТ 5632) | закалка + отпуск 200-300 °C, 45-50 HRC
+names: 20Х13 (ГОСТ 5632) || X20Cr13 = 1.4021 (EN 10088) = 420 (AISI)
+state: закалка + отпуск 200-300 °C, 45-50 HRC
+state_en: quenched + tempered at 200-300 °C, 45-50 HRC
+section: Fe
+fric: SS_M
+alpha100: 10.3
+dalpha: 0.3
+tmin: -40
+tmax: 300
+tchg: 200
+potential: -0.25
+E: 215
+nu: 0.28
+Rp: 1000
+note: Отпускная хрупкость при 400-550 °C
+note_en: Temper embrittlement at 400-550 °C
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_18_stal-40h13.txt
+# Сталь 40Х13 (ГОСТ 5632) | закалка + отпуск 200-300 °C, 48-52 HRC
+names: Сталь 40Х13 (ГОСТ 5632)
+state: закалка + отпуск 200-300 °C, 48-52 HRC
+state_en: quenched + tempered at 200-300 °C, 48-52 HRC
+section: Fe
+fric: SS_M
+alpha100: 10.3
+dalpha: 0.3
+tmin: -40
+tmax: 300
+tchg: 200
+potential: -0.25
+E: 215
+nu: 0.28
+Rp: 1200
+note: Отпускная хрупкость при 400-550 °C
+note_en: Temper embrittlement at 400-550 °C
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_19_17-4ph-630-x5crnicunb16-4-1-.txt
+# 17-4PH = 630 (AISI) = X5CrNiCuNb16-4 = 1.4542 (EN 10088) | дисперсионное твердение H900 (старение 480 °C)
+names: 17-4PH = 630 (AISI) = X5CrNiCuNb16-4 = 1.4542 (EN 10088)
+state: дисперсионное твердение H900 (старение 480 °C)
+state_en: precipitation hardened H900 (aged at 480 °C)
+section: Fe
+fric: SS_M
+alpha100: 10.8
+dalpha: 0.3
+tmin: -30
+tmax: 315
+tchg: 480
+potential: -0.10
+E: 196
+nu: 0.27
+Rp: 1170
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_20_17-4ph-630-x5crnicunb16-4-1-.txt
+# 17-4PH = 630 (AISI) = X5CrNiCuNb16-4 = 1.4542 (EN 10088) | дисперсионное твердение H1025 (старение 550 °C)
+names: 17-4PH = 630 (AISI) = X5CrNiCuNb16-4 = 1.4542 (EN 10088)
+state: дисперсионное твердение H1025 (старение 550 °C)
+state_en: precipitation hardened H1025 (aged at 550 °C)
+section: Fe
+fric: SS_M
+alpha100: 10.8
+dalpha: 0.3
+tmin: -30
+tmax: 315
+tchg: 550
+potential: -0.10
+E: 196
+nu: 0.27
+Rp: 1000
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_21_sch20.txt
+# СЧ20 (ГОСТ 1412) | литьё
+names: СЧ20 (ГОСТ 1412) || EN-GJL-200 = EN-JL1030 (EN 1561) || Class 30 (ASTM A48)
+state: литьё
+state_en: cast
+section: Fe
+fric: CI
+alpha100: 10.5
+dalpha: 0.45
+tmin: -40
+tmax: 300
+tchg: -
+potential: -0.60
+E: 100
+nu: 0.26
+Rp: 200
+note: Хорошие антифрикционные свойства, хрупкий
+note_en: Good antifriction properties (graphite), brittle
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Fe_22_vch50.txt
+# ВЧ50 (ГОСТ 7293) | литьё, феррито-перлитный
+names: ВЧ50 (ГОСТ 7293) || EN-GJS-500-7 = EN-JS1050 (EN 1563)
+state: литьё, феррито-перлитный
+state_en: cast, ferritic-pearlitic
+section: Fe
+fric: CI
+alpha100: 11.5
+dalpha: 0.45
+tmin: -30
+tmax: 350
+tchg: -
+potential: -0.60
+E: 170
+nu: 0.28
+Rp: 320
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_01_pa6-pa6-nylon-6.txt
+# ПА6 (капролон) = PA6 = Nylon 6 (ISO 1874) | литьё/экструзия, сухой
+names: ПА6 (капролон) = PA6 = Nylon 6 (ISO 1874)
+state: литьё/экструзия, сухой
+state_en: cast/extruded, dry
+section: NM
+fric: PL_SL
+alpha100: 80
+dalpha: 0
+tmin: -40
+tmax: 100
+tchg: 50
+potential: -
+E: 3.2
+nu: 0.39
+Rp: 80
+note: Стеклование сухого ~50 °C; водопоглощение 2-7 % даёт набухание
+note_en: Dry Tg ~50 °C; water uptake of 2-7 % causes swelling
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_02_pa66-pa66-nylon-66.txt
+# ПА66 = PA66 = Nylon 66 (ISO 1874) | экструзия, сухой
+names: ПА66 = PA66 = Nylon 66 (ISO 1874)
+state: экструзия, сухой
+state_en: extruded, dry
+section: NM
+fric: PL_SL
+alpha100: 80
+dalpha: 0
+tmin: -30
+tmax: 100
+tchg: 70
+potential: -
+E: 3.0
+nu: 0.39
+Rp: 80
+note: Набухание от влаги
+note_en: Swells with moisture
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_03_pa6-+-30-steklovolokna-pa6-g.txt
+# ПА6 + 30 % стекловолокна = PA6-GF30 | литьё под давлением, сухой
+names: ПА6 + 30 % стекловолокна = PA6-GF30
+state: литьё под давлением, сухой
+state_en: injection molded, dry
+section: NM
+fric: PL_SL
+alpha100: 35
+dalpha: 0
+tmin: -30
+tmax: 120
+tchg: 50
+potential: -
+E: 9
+nu: 0.38
+Rp: 150
+note: КТР анизотропный (30-90); абразивен
+note_en: Anisotropic CTE (30-90); abrasive
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_04_poliacetal-pom-c-pom-c.txt
+# Полиацеталь POM-C = POM-C (ISO 29988) | экструзия
+names: Полиацеталь POM-C = POM-C (ISO 29988)
+state: экструзия
+state_en: extruded
+section: NM
+fric: PL_SL
+alpha100: 110
+dalpha: 0
+tmin: -40
+tmax: 100
+tchg: -
+potential: -
+E: 2.8
+nu: 0.35
+Rp: 65
+note: Деструкция выше 140 °C
+note_en: Degrades above 140 °C
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_05_poliacetal-pom-h-pom-h.txt
+# Полиацеталь POM-H (Делрин) = POM-H (ISO 29988) | экструзия
+names: Полиацеталь POM-H (Делрин) = POM-H (ISO 29988)
+state: экструзия
+state_en: extruded
+section: NM
+fric: PL_SL
+alpha100: 100
+dalpha: 0
+tmin: -40
+tmax: 90
+tchg: -
+potential: -
+E: 3.1
+nu: 0.35
+Rp: 70
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_06_ftoroplast-4-ptfe.txt
+# Фторопласт-4 = PTFE (ISO 12086) | спекание
+names: Фторопласт-4 = PTFE (ISO 12086)
+state: спекание
+state_en: sintered
+section: NM
+fric: PL_SL
+alpha100: 120
+dalpha: 0
+tmin: -196
+tmax: 260
+tchg: 30
+potential: -
+E: 0.5
+nu: 0.46
+Rp: 10
+note: Фазовые переходы 19 и 30 °C (скачок объёма ~1 %), хладотекучесть
+note_en: Phase transitions at 19 and 30 °C (~1 % volume jump), cold flow
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_07_ftoroplast-4-+-25-steklovolo.txt
+# Фторопласт-4 + 25 % стекловолокна = PTFE-GF25 | спекание
+names: Фторопласт-4 + 25 % стекловолокна = PTFE-GF25
+state: спекание
+state_en: sintered
+section: NM
+fric: PL_SL
+alpha100: 70
+dalpha: 0
+tmin: -196
+tmax: 260
+tchg: 30
+potential: -
+E: 1.2
+nu: 0.45
+Rp: 14
+note: Фазовые переходы 19 и 30 °C
+note_en: Phase transitions at 19 and 30 °C
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_08_peek.txt
+# PEEK (ISO 23013) | ненаполненный
+names: PEEK (ISO 23013)
+state: ненаполненный
+state_en: unfilled
+section: NM
+fric: PL_SL
+alpha100: 47
+dalpha: 0
+tmin: -60
+tmax: 250
+tchg: 143
+potential: -
+E: 4.0
+nu: 0.4
+Rp: 100
+note: Выше Tg 143 °C КТР растёт примерно вдвое
+note_en: Above Tg (143 °C) CTE roughly doubles
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_09_peek-+-30-uglevolokna-peek-c.txt
+# PEEK + 30 % углеволокна = PEEK-CF30 | экструзия/литьё
+names: PEEK + 30 % углеволокна = PEEK-CF30
+state: экструзия/литьё
+state_en: extruded/molded
+section: NM
+fric: PL_SL
+alpha100: 15
+dalpha: 0
+tmin: -60
+tmax: 250
+tchg: 143
+potential: 0.20
+E: 13
+nu: 0.4
+Rp: 200
+note: Углеволокно электропроводно: гальваническая пара с Al, сталью
+note_en: Carbon fibre is conductive: galvanic couple with Al, steel
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_10_pet-p.txt
+# PET-P (Эртализд) | экструзия
+names: PET-P (Эртализд)
+state: экструзия
+state_en: extruded
+section: NM
+fric: PL_SL
+alpha100: 60
+dalpha: 0
+tmin: -20
+tmax: 100
+tchg: 80
+potential: -
+E: 3.3
+nu: 0.38
+Rp: 80
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_11_polikarbonat-pc.txt
+# Поликарбонат = PC (ISO 7391) | аморфный
+names: Поликарбонат = PC (ISO 7391)
+state: аморфный
+state_en: amorphous
+section: NM
+fric: PL
+alpha100: 65
+dalpha: 0
+tmin: -100
+tmax: 115
+tchg: 145
+potential: -
+E: 2.3
+nu: 0.37
+Rp: 62
+note: Растрескивание от масел и растворителей
+note_en: Stress cracking from oils and solvents
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_12_pnd-pe-hd.txt
+# ПНД = PE-HD (ISO 17855) | экструзия
+names: ПНД = PE-HD (ISO 17855)
+state: экструзия
+state_en: extruded
+section: NM
+fric: PL_SL
+alpha100: 150
+dalpha: 0
+tmin: -50
+tmax: 80
+tchg: -
+potential: -
+E: 1.0
+nu: 0.42
+Rp: 25
+note: Большой КТР, ползучесть
+note_en: Large CTE, creep
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_13_pe-1000-pe-uhmw.txt
+# ПЭ-1000 = PE-UHMW (ISO 11542) | прессованный
+names: ПЭ-1000 = PE-UHMW (ISO 11542)
+state: прессованный
+state_en: compression molded
+section: NM
+fric: PL_SL
+alpha100: 190
+dalpha: 0
+tmin: -200
+tmax: 80
+tchg: -
+potential: -
+E: 0.8
+nu: 0.42
+Rp: 20
+note: Высокая износостойкость
+note_en: High wear resistance
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_14_polipropilen-pp-h.txt
+# Полипропилен = PP-H (ISO 19069) | экструзия
+names: Полипропилен = PP-H (ISO 19069)
+state: экструзия
+state_en: extruded
+section: NM
+fric: PL
+alpha100: 100
+dalpha: 0
+tmin: 0
+tmax: 100
+tchg: -
+potential: -
+E: 1.6
+nu: 0.42
+Rp: 33
+note: Хрупок ниже 0 °C
+note_en: Brittle below 0 °C
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_15_polivinilhlorid-pvc-u.txt
+# Поливинилхлорид = PVC-U (ISO 1163) | экструзия
+names: Поливинилхлорид = PVC-U (ISO 1163)
+state: экструзия
+state_en: extruded
+section: NM
+fric: PL
+alpha100: 70
+dalpha: 0
+tmin: 0
+tmax: 60
+tchg: -
+potential: -
+E: 3.0
+nu: 0.38
+Rp: 50
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_16_poliimid.txt
+# Полиимид (Vespel SP-1, ПМ) | прессование/спекание
+names: Полиимид (Vespel SP-1, ПМ)
+state: прессование/спекание
+state_en: compression molded/sintered
+section: NM
+fric: PL_SL
+alpha100: 50
+dalpha: 0
+tmin: -240
+tmax: 260
+tchg: -
+potential: -
+E: 3.1
+nu: 0.41
+Rp: 85
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_17_pps.txt
+# PPS (ISO 16792) | экструзия/обработка
+names: PPS (ISO 16792)
+state: экструзия/обработка
+state_en: extruded/machined
+section: NM
+fric: PL
+alpha100: 50
+dalpha: 0
+tmin: -50
+tmax: 200
+tchg: 90
+potential: -
+E: 3.8
+nu: 0.37
+Rp: 80
+note: 
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_18_tekstolit-ptk.txt
+# Текстолит ПТК (ГОСТ 5-78) | прессованный
+names: Текстолит ПТК (ГОСТ 5-78)
+state: прессованный
+state_en: compression molded
+section: NM
+fric: PL_SL
+alpha100: 30
+dalpha: 0
+tmin: -40
+tmax: 105
+tchg: -
+potential: -
+E: 7
+nu: 0.3
+Rp: 100
+note: Анизотропия КТР; гигроскопичен
+note_en: Anisotropic CTE; hygroscopic
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_19_oksid-alyuminiya-96-al2o3.txt
+# Оксид алюминия 96 % = Al2O3 (ISO 6474-1) | спечённая керамика
+names: Оксид алюминия 96 % = Al2O3 (ISO 6474-1)
+state: спечённая керамика
+state_en: sintered ceramic
+section: NM
+fric: CER
+alpha100: 7.8
+dalpha: 0.35
+tmin: -200
+tmax: 1500
+tchg: -
+potential: -
+E: 350
+nu: 0.22
+Rp: 250
+note: Хрупкая
+note_en: Brittle
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_20_dioksid-cirkoniya-zro2-y-tzp.txt
+# Диоксид циркония = ZrO2 Y-TZP (ISO 13356) | спечённая керамика
+names: Диоксид циркония = ZrO2 Y-TZP (ISO 13356)
+state: спечённая керамика
+state_en: sintered ceramic
+section: NM
+fric: CER
+alpha100: 10.5
+dalpha: 0.2
+tmin: -200
+tmax: 800
+tchg: 200
+potential: -
+E: 205
+nu: 0.3
+Rp: 400
+note: Деградация во влаге при 200-300 °C
+note_en: Low-temperature degradation in humidity at 200-300 °C
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_21_nitrid-kremniya-si3n4.txt
+# Нитрид кремния = Si3N4 | спечённая керамика
+names: Нитрид кремния = Si3N4
+state: спечённая керамика
+state_en: sintered ceramic
+section: NM
+fric: CER
+alpha100: 3.2
+dalpha: 0.15
+tmin: -200
+tmax: 1000
+tchg: -
+potential: -
+E: 300
+nu: 0.27
+Rp: 450
+note: Стоек к термоудару
+note_en: Thermal-shock resistant
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_22_karbid-kremniya-sic.txt
+# Карбид кремния = SiC | спечённая керамика
+names: Карбид кремния = SiC
+state: спечённая керамика
+state_en: sintered ceramic
+section: NM
+fric: CER
+alpha100: 4.5
+dalpha: 0.25
+tmin: -200
+tmax: 1400
+tchg: -
+potential: -
+E: 410
+nu: 0.17
+Rp: 300
+note: Очень твёрдый
+note_en: Very hard
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ NM_23_grafit-antifrikcionnyy.txt
+# Графит антифрикционный (АО-1500) | прессованный, пропитанный
+names: Графит антифрикционный (АО-1500)
+state: прессованный, пропитанный
+state_en: pressed, impregnated
+section: NM
+fric: PL_SL
+alpha100: 4.5
+dalpha: 0.5
+tmin: -200
+tmax: 350
+tchg: -
+potential: 0.25
+E: 12
+nu: 0.2
+Rp: 40
+note: Катодный: гальваническая коррозия с металлами
+note_en: Cathodic: galvanic corrosion with metals
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+@@@ Ti_01_vt6.txt
+# ВТ6 (ГОСТ 19807) | отжиг
+names: ВТ6 (ГОСТ 19807) || Ti-6Al-4V = Grade 5 = 3.7165 (EN) = R56400 (UNS)
+state: отжиг
+state_en: annealed
+section: Ti
+fric: TI
+alpha100: 8.6
+dalpha: 0.3
+tmin: -196
+tmax: 350
+tchg: -
+potential: -0.05
+E: 114
+nu: 0.34
+Rp: 830
+note: Склонен к задирам; нужны покрытия или азотирование
+note_en: Prone to galling; needs coatings or nitriding
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+</script>
+<script type="text/plain" id="tpl_src">
+# ШАБЛОН ФАЙЛА МАТЕРИАЛА. Копируйте, переименуйте (например Fe_30_my_steel.txt), заполните и загрузите в калькулятор.
+# Файлы, имя которых начинается с "_", калькулятор пропускает. Одноимённый файл заменяет встроенный.
+# Формат строк "ключ: значение". "-" = нет данных. Десятичный разделитель - точка или запятая.
+names: Сталь XX (ГОСТ ...) = EN-обозначение = AISI ...  || близкий, но не идентичный аналог
+state: состояние поставки / термообработка
+state_en: condition / heat treatment (English, optional)
+section: Fe
+# section: Fe - железо; Al - алюминий; Cu - медь; Ti - прочие металлы; NM - неметаллы
+fric: STEEL_S
+# fric: STEEL_H STEEL_S SS_A SS_M CI BRZ BRS CU AL AL_AN TI PL_SL PL CER
+alpha100: 11.6
+# alpha100 - средний КТР 20...100 °C, 1e-6/K; dalpha - рост среднего КТР на каждые 100 K (если нет таблицы alpha)
+dalpha: 0.55
+tmin: -40
+tmax: 400
+tchg: -
+potential: -0.65
+E: 210
+nu: 0.30
+Rp: 355
+note: примечание
+note_en: note (English, optional)
+# --- Таблицы (необязательно). Если заданы, заменяют линейные оценки; промежуточные значения - линейная интерполяция.
+# Строки: температура, °C ; значение. Минимум две строки. Раскомментируйте и заполните:
+# [table E]      E, ГПа
+# 20 ; 210
+# 200 ; 200
+# [table Rp]     Rp0,2, МПа (для хрупких - предел прочности)
+# 20 ; 355
+# 200 ; 290
+# [table alpha]  средний КТР в интервале от 20 °C до T, 1e-6/K
+# 100 ; 11.6
+# 300 ; 12.8
+</script>
+
+<script>
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+let lang='en';try{lang=localStorage.getItem('tf_lang')||(/^(ru|uk|be|kk|sr|bg)/i.test(navigator.language||'')?'ru':'en')}catch(e){}
+const LG=(ru,en)=>lang=='en'?en:ru;
+const UI={title:['Тепловые зазоры в соединении вал – отверстие','Thermal clearance of a shaft–hole joint'],shaft:['Вал','Shaft'],hole:['Отверстие','Hole'],dia:['Диаметр, мм','Diameter, mm'],mat:['Материал и состояние','Material and condition'],dout:['Наружный Ø втулки, мм (пусто = 2×D)','Outer Ø of the part with the hole, mm (empty = 2×D)'],dbore:['Ø отверстия в валу, мм (0 = сплошной)','Bore Ø in the shaft, mm (0 = solid)'],tol:['Допуски (для 20 °C)','Tolerances (at 20 °C)'],fit:['Посадка','Fit'],sep:['Отдельно: отв.','Separate: hole'],shw:[' вал ',' shaft '],man:['Вручную, мкм','Manual, µm'],kES:['ES отв.','ES hole'],kEI:['EI отв.','EI hole'],kes:['es вала','es shaft'],kei:['ei вала','ei shaft'],temp:['Температура, °C','Temperature, °C'],tc:['Расчётная','Calculation'],t1:['График от','Graph from'],t2:['до','to'],go:['Рассчитать','Calculate'],lib:['Библиотека материалов','Material library'],files:['Файлы…','Files…'],folder:['Папка…','Folder…'],tpl:['Шаблон','Template'],rst:['Сброс','Reset']};
+function applyLang(){const i=lang=='en'?1:0;document.querySelectorAll('[data-t]').forEach(e=>e.textContent=UI[e.dataset.t][i]);document.documentElement.lang=lang;document.title=UI.title[i]}
+const LO='абвгдеёжзийклмнопрстуфхцчшщъыьэюя',LA=['a','b','v','g','d','e','e','zh','z','i','y','k','l','m','n','o','p','r','s','t','u','f','kh','ts','ch','sh','shch','','y','','e','yu','ya'],TRC={};
+[...LO].forEach((c,i)=>{TRC[c]=LA[i];TRC[c.toUpperCase()]=LA[i]?LA[i][0].toUpperCase()+LA[i].slice(1):''});
+const WORDS=[['Фторопласт-4','Fluoroplastic-4'],['Оксид алюминия','Alumina'],['Диоксид циркония','Zirconia'],['Нитрид кремния','Silicon nitride'],['Карбид кремния','Silicon carbide'],['Графит антифрикционный','Antifriction graphite'],['Полиацеталь','Polyacetal'],['Полиамид','Polyamide'],['Поликарбонат','Polycarbonate'],['Полипропилен','Polypropylene'],['Поливинилхлорид','PVC (unplasticized)'],['Полиимид','Polyimide'],['Текстолит','Textolite'],['стекловолокна','glass fibre'],['углеволокна','carbon fibre'],['капролон','caprolon'],['Делрин','Delrin'],['Эртализд','Ertalyte'],['Сталь','Steel'],['Чугун','Cast iron'],['Бронза','Bronze'],['Латунь','Brass'],['Медь','Copper'],['ПНД','HDPE'],['ПЭ-1000','PE-1000']];
+const nameL=m=>{let s=m.name;if(lang!='en'||!/[А-Яа-яЁё]/.test(s))return s;WORDS.forEach(([a,b])=>s=s.split(a).join(b));return s.replace(/[А-Яа-яЁё]/g,c=>TRC[c]??c)},stL=m=>lang=='en'&&m.stateEn?m.stateEn:m.state,ntL=m=>lang=='en'&&m.noteEn?m.noteEn:m.note;
+let M=[],helpOpen=false,USER={};const BUILT={};$('lib').textContent.split(/^@@@\s*/m).forEach(x=>{const i=x.indexOf('\n');if(i>0)BUILT[x.slice(0,i).trim()]=x.slice(i+1)});try{USER=JSON.parse(localStorage.getItem('tf_user')||'{}')}catch(e){}
+const SEC=[['Fe','Железо: стали и чугуны','Iron-based: steels and cast irons'],['Al','Алюминиевые сплавы','Aluminium alloys'],['Cu','Медные сплавы','Copper alloys'],['Ti','Прочие металлы','Other metals'],['NM','Неметаллы','Non-metals']];
+const interp=(t,T)=>{const n=t.length-1;if(T<=t[0][0])return t[0][1];if(T>=t[n][0])return t[n][1];for(let i=0;i<n;i++)if(T<=t[i+1][0])return t[i][1]+(t[i+1][1]-t[i][1])*(T-t[i][0])/(t[i+1][0]-t[i][0])};
+function parseMat(txt,fn){const kv={},tb={};let cur=null;
+ for(const raw of txt.split(/\r?\n/)){const s=raw.trim();if(!s||s[0]=='#')continue;
+  const h=s.match(/^\[table\s+(E|Rp|alpha)\]/i);if(h){cur=h[1].toLowerCase();tb[cur]=[];continue}
+  if(cur&&/^[-+]?\d/.test(s)){const p=s.split(/[;\t ]+/).map(x=>parseFloat(x.replace(',','.')));if(p.length>=2&&!isNaN(p[0])&&!isNaN(p[1]))tb[cur].push([p[0],p[1]]);continue}
+  const i=s.indexOf(':');if(i<1)continue;cur=null;kv[s.slice(0,i).trim().toLowerCase()]=s.slice(i+1).trim()}
+ const n=x=>(x==null||x===''||x==='-')?null:parseFloat(String(x).replace(',','.'));
+ const tab=k=>tb[k]&&tb[k].length>1?tb[k].sort((a,b)=>a[0]-b[0]):null;
+ const b={sec:kv.section||'Fe',state:kv.state||'',a100:n(kv.alpha100),da:n(kv.dalpha)||0,tmin:n(kv.tmin)??-1000,tmax:n(kv.tmax)??1e5,tchg:n(kv.tchg),pot:n(kv.potential),fric:(kv.fric||'').toUpperCase(),E:n(kv.e),nu:n(kv.nu),Rp:n(kv.rp),note:kv.note||'',stateEn:kv.state_en||'',noteEn:kv.note_en||'',tE:tab('e'),tR:tab('rp'),tA:tab('alpha'),src:fn};
+ if(b.a100==null&&!b.tA)throw Error('нет alpha100');
+ if(b.a100==null)b.a100=interp(b.tA,100);
+ if(b.E==null&&b.tE)b.E=interp(b.tE,20);if(b.Rp==null&&b.tR)b.Rp=interp(b.tR,20);
+ return(kv.names||fn).split('||').map(x=>({...b,name:x.trim()}))}
+function rebuild(){M=[];const all={...BUILT,...USER},bad=[];
+ for(const fn of Object.keys(all).sort()){try{M.push(...parseMat(all[fn],fn))}catch(e){bad.push(fn)}}
+ fill();$('cnt').textContent=LG('Материалов: ','Materials: ')+M.length+LG(' (файлов: ',' (files: ')+Object.keys(all).length+(Object.keys(USER).length?LG(', своих: ',', custom: ')+Object.keys(USER).length:'')+')'+(bad.length?LG('; ошибки в файлах: ','; file errors: ')+bad.join(', '):'')}
+function fill(){for(const id of['mS','mH']){const el=$(id),old=el.selectedOptions&&el.selectedOptions[0]?el.selectedOptions[0].textContent:'';el.innerHTML='';
+ for(const[k,t,te]of SEC){const g=document.createElement('optgroup');g.label=lang=='en'?te:t;
+  M.forEach((m,i)=>{if(m.sec==k){const o=document.createElement('option');o.value=i;o.textContent=nameL(m)+' | '+stL(m);g.appendChild(o)}});
+  if(g.children.length)el.appendChild(g)}
+ if(old){const o=[...el.options].find(x=>x.textContent==old);if(o)el.value=o.value}}}
+// ---------- ISO 286 ----------
+const SUB=[3,6,10,14,18,24,30,40,50,65,80,100,120,140,160,180,200,225,250,280,315,355,400,450,500],MAIN=[3,6,10,18,30,50,80,120,180,250,315,400,500];
+const ix=(a,D)=>{if(!(D>0&&D<=500))throw Error(LG('Допуски ISO 286: диаметр 0...500 мм','ISO 286 tolerances: diameter 0...500 mm'));return a.findIndex(h=>D<=h)};
+const IT={4:[3,4,4,5,6,7,8,10,12,14,16,18,20],5:[4,5,6,8,9,11,13,15,18,20,23,25,27],6:[6,8,9,11,13,16,19,22,25,29,32,36,40],7:[10,12,15,18,21,25,30,35,40,46,52,57,63],8:[14,18,22,27,33,39,46,54,63,72,81,89,97],9:[25,30,36,43,52,62,74,87,100,115,130,140,155],10:[40,48,58,70,84,100,120,140,160,185,210,230,250],11:[60,75,90,110,130,160,190,220,250,290,320,360,400],12:[100,120,150,180,210,250,300,350,400,460,520,570,630]};
+const FD={c:[-60,-70,-80,-95,-95,-110,-110,-120,-130,-140,-150,-170,-180,-200,-210,-230,-240,-260,-280,-300,-330,-360,-400,-440,-480],d:[-20,-30,-40,-50,-50,-65,-65,-80,-80,-100,-100,-120,-120,-145,-145,-145,-170,-170,-170,-190,-190,-210,-210,-230,-230],e:[-14,-20,-25,-32,-32,-40,-40,-50,-50,-60,-60,-72,-72,-85,-85,-85,-100,-100,-100,-110,-110,-125,-125,-135,-135],f:[-6,-10,-13,-16,-16,-20,-20,-25,-25,-30,-30,-36,-36,-43,-43,-43,-50,-50,-50,-56,-56,-62,-62,-68,-68],g:[-2,-4,-5,-6,-6,-7,-7,-9,-9,-10,-10,-12,-12,-14,-14,-14,-15,-15,-15,-17,-17,-18,-18,-20,-20],k:[0,1,1,1,1,2,2,2,2,2,2,3,3,3,3,3,4,4,4,4,4,4,4,5,5],m:[2,4,6,7,7,8,8,9,9,11,11,13,13,15,15,15,17,17,17,20,20,21,21,23,23],n:[4,8,10,12,12,15,15,17,17,20,20,23,23,27,27,27,31,31,31,34,34,37,37,40,40],p:[6,12,15,18,18,22,22,26,26,32,32,37,37,43,43,43,50,50,50,56,56,62,62,68,68],r:[10,15,19,23,23,28,28,34,34,41,43,51,54,63,65,68,77,80,84,94,98,108,114,126,132],s:[14,19,23,28,28,35,35,43,43,53,59,71,79,92,100,108,122,130,140,158,170,190,208,232,252]};
+const itv=(g,D)=>{if(!IT[g])throw Error(LG('Поддерживаются квалитеты IT5...IT12','Supported grades: IT5...IT12'));return IT[g][ix(MAIN,D)]},fund=(l,D)=>FD[l][ix(SUB,D)],dlt=(g,D)=>D<=3?0:itv(g,D)-itv(g-1,D);
+function shaftDev(l,g,D){const it=itv(g,D);let up,lo;
+ if(l.length==1&&'cdefg'.includes(l)){up=fund(l,D);lo=up-it}else if(l=='h'){up=0;lo=-it}else if(l=='js'){up=it/2;lo=-it/2}
+ else if(l=='k'){lo=(g<=7)?fund('k',D):0;up=lo+it}else if(l.length==1&&'mnprs'.includes(l)){lo=fund(l,D);up=lo+it}
+ else throw Error(LG('Поле допуска вала «'+l+'» не поддерживается (c d e f g h js k m n p r s)','Shaft tolerance field "'+l+'" is not supported (c d e f g h js k m n p r s)'));return[up,lo]}
+function holeDev(l,g,D){const it=itv(g,D);let up,lo,b;
+ if(l.length==1&&'CDEFG'.includes(l)){lo=-fund(l.toLowerCase(),D);up=lo+it}else if(l=='H'){lo=0;up=it}else if(l=='JS'){up=it/2;lo=-it/2}
+ else if(l=='K'){up=g<=8?-fund('k',D)+dlt(g,D):0;lo=up-it}else if(l=='M'){b=fund('m',D);up=g<=8?-b+dlt(g,D):-b;lo=up-it}
+ else if(l=='N'){up=g<=8?-fund('n',D)+dlt(g,D):0;lo=up-it}else if(l.length==1&&'PRS'.includes(l)){b=fund(l.toLowerCase(),D);up=-b+(g<=7?dlt(g,D):0);lo=up-it}
+ else throw Error(LG('Поле допуска отверстия «'+l+'» не поддерживается (C D E F G H JS K M N P R S)','Hole tolerance field "'+l+'" is not supported (C D E F G H JS K M N P R S)'));return[up,lo]}
+const LK={'Н':'H','Е':'E','С':'C','К':'K','М':'M','Р':'P','е':'e','с':'c','к':'k','м':'m','р':'p','н':'h'};
+const norm=s=>s.replace(/\s/g,'').replace(/[НЕСКМРесмрн]/g,c=>LK[c]||c).replace(/\\/g,'/');
+function parseTol(s,hole){const m=norm(s).match(/^([A-Za-z]+)(\d+)$/);if(!m)throw Error(LG('Допуск задаётся буквой и квалитетом, например H7 или g6','A tolerance is a letter plus a grade, e.g. H7 or g6'));
+ const g=+m[2];if(g<5||g>12)throw Error(LG('Поддерживаются квалитеты IT5...IT12','Supported grades: IT5...IT12'));const l=hole?m[1].toUpperCase():m[1].toLowerCase();
+ return{des:l+g,l,g}}
+const num=(id,what)=>{const s=$(id).value.trim().replace(',','.');if(!/^[-+]?\d*\.?\d+$/.test(s))throw Error(LG('Некорректное число: ','Invalid number: ')+what);return parseFloat(s)};
+// ---------- термика ----------
+const eps=(m,T)=>{const d=T-20;if(m.tA)return d*interp(m.tA,T)*1e-6;const a0=m.a100-0.8*m.da;return d*(a0+m.da/100*d)*1e-6};
+function state(P,T){const kh=1+eps(P.mh,T),ks=1+eps(P.ms,T);
+ const hmin=P.dH+P.hLo/1000,hmax=P.dH+P.hUp/1000,smin=P.dS+P.sLo/1000,smax=P.dS+P.sUp/1000;
+ return{hmin:hmin*kh,hmax:hmax*kh,smin:smin*ks,smax:smax*ks,Smin:(hmin*kh-smax*ks)*1000,Smax:(hmax*kh-smin*ks)*1000}}
+const TOL=1;
+const verdict=(a,b)=>a>=TOL?LG('ПОСАДКА С ЗАЗОРОМ (зазор при любом сочетании размеров)','CLEARANCE FIT (clearance for any combination of sizes)'):(a>-TOL&&b>=TOL)?LG('СКОЛЬЗЯЩАЯ ПОСАДКА (минимальный зазор около нуля)','SLIDING FIT (minimum clearance close to zero)'):b<=-TOL?LG('ПОСАДКА С НАТЯГОМ (натяг при любом сочетании размеров)','INTERFERENCE FIT (interference for any combination of sizes)'):b<TOL?LG('ПОСАДКА С НАТЯГОМ (максимальный зазор около нуля)','INTERFERENCE FIT (maximum clearance close to zero)'):LG('ПЕРЕХОДНАЯ ПОСАДКА (возможны и зазор, и натяг)','TRANSITION FIT (both clearance and interference possible)');
+const fs=x=>(x>0.05?'+':'')+(Math.abs(x)<0.05?'0.0':x.toFixed(1));
+function crossings(P,T1,T2,key){const N=500,r=[];let pv=null,pt=null;
+ for(let i=0;i<=N;i++){const t=T1+(T2-T1)*i/N,v=state(P,t)[key];
+  if(pv!==null&&((pv<0&&v>=0)||(pv>0&&v<=0)))r.push({t:pt+(t-pt)*(0-pv)/(v-pv),dec:v<pv});pv=v;pt=t}return r}
+// ---------- пары ----------
+const isPol=c=>c=='PL_SL'||c=='PL',has=(a,b,x)=>a==x||b==x,oth=(a,b,x)=>a==x?b:a,inS=(c,l)=>l.split(',').includes(c);
+function fric(A,B){const a=A.fric,b=B.fric;let sc=0,m=LG('Фрикционная пара без явных особенностей (зависит от смазки, нагрузки, шероховатости).','No notable friction-pair issues (depends on lubrication, load, roughness).');const R=()=>[sc,m];
+ if(isPol(a)&&isPol(b)){if(A.name==B.name){sc=-1;m=LG('Одинаковые полимеры: повышенное трение и износ; применяйте разные полимеры.','Identical polymers: higher friction and wear; use different polymers.')}return R()}
+ if(isPol(a)||isPol(b)){if((isPol(a)?a:b)=='PL_SL'){sc=1;m=LG('Самосмазывающийся полимер по металлу/керамике (контртело Ra 0,2-0,8 мкм; плохой отвод тепла).','Self-lubricating polymer against metal/ceramic (counterface Ra 0.2-0.8 µm; poor heat dissipation).')}else m=LG('Полимер не антифрикционный: без смазки возможен повышенный износ.','Polymer is not self-lubricating: increased wear is possible without lubrication.');return R()}
+ if(a==b){if(inS(a,'SS_A,SS_M,AL,TI,STEEL_S,BRS,CU,BRZ')){sc=-1;m=LG('Однородные материалы: сильная склонность к схватыванию и задирам.','Similar materials: strong tendency to adhesion and galling.')}
+  else if(a=='CI'||a=='CER'){sc=1;m=LG('Износостойкое сочетание (графит чугуна / керамика).','Wear-resistant combination (cast-iron graphite / ceramic).')}else if(a=='STEEL_H')m=LG('Пара закалённых сталей: только при хорошей смазке, иначе риск схватывания.','Pair of hardened steels: only with good lubrication, otherwise risk of seizure.');return R()}
+ if(has(a,b,'TI')&&!has(a,b,'CER')){sc=-1;m=LG('Титан склонен к схватыванию и задирам почти со всеми металлами.','Titanium tends to seize and gall against almost all metals.');return R()}
+ if(has(a,b,'CER')){if(has(a,b,'AL'))m=LG('Керамика по алюминию: нейтрально, возможен абразивный износ алюминия.','Ceramic against aluminium: neutral, abrasive wear of the aluminium is possible.');else{sc=1;m=LG('Керамика по металлу: высокая износостойкость.','Ceramic against metal: high wear resistance.')}return R()}
+ if(has(a,b,'AL')){sc=-1;m=LG('Алюминий без упрочнения склонен к налипанию и задирам.','Unhardened aluminium tends to adhere and gall.');return R()}
+ if(has(a,b,'AL_AN')&&inS(oth(a,b,'AL_AN'),'STEEL_H,STEEL_S,SS_M,CI,BRZ')){sc=1;m=LG('Твёрдое анодирование по стали/чугуну/бронзе.','Hard anodizing against steel/cast iron/bronze.');return R()}
+ if(has(a,b,'SS_A')&&!inS(oth(a,b,'SS_A'),'BRZ,AL_AN')){sc=-1;m=LG('Аустенитная нержавеющая сталь склонна к задирам с большинством материалов.','Austenitic stainless steel tends to gall against most materials.');return R()}
+ if(has(a,b,'BRZ')&&inS(oth(a,b,'BRZ'),'STEEL_H,STEEL_S,SS_M,CI')){sc=1;m=LG('Сталь/чугун по бронзе: классическая антифрикционная пара.','Steel/cast iron against bronze: classic antifriction pair.');return R()}
+ if(has(a,b,'CI')&&inS(oth(a,b,'CI'),'STEEL_H,STEEL_S,SS_M')){sc=1;m=LG('Сталь по чугуну (графит работает как смазка).','Steel against cast iron (graphite acts as lubricant).');return R()}
+ return R()}
+
+function schema(P,T,hD,sD,b){const W=760,H=300,Tp=16,Bm=34,off=(P.dS-P.dH)*1000,k=(m,d)=>(m-d)*1000,a=state(P,20);
+ const hz=[[P.hLo,P.hUp],[k(b.hmin,P.dH),k(b.hmax,P.dH)]],sz=[[P.sLo+off,P.sUp+off],[k(b.smin,P.dH),k(b.smax,P.dH)]];
+ const all=[0,...hz.flat(),...sz.flat()];let y1=Math.min(...all),y2=Math.max(...all);const pad=Math.max((y2-y1)*0.3,4);y1-=pad;y2+=pad;
+ const Y=v=>Tp+(y2-v)/(y2-y1)*(H-Tp-Bm),hx=430,sx=522,zw=76,sg=v=>(v>0?'+':v<0?'\u2212':'')+Math.abs(v).toFixed(1).replace(/\.0$/,'');
+ const rect=(x,z,c,dash)=>`<rect x="${x}" y="${Y(z[1])}" width="${zw}" height="${Math.max(Y(z[0])-Y(z[1]),1.5)}" fill="${dash?'none':c}" fill-opacity=".35" stroke="${c}" stroke-width="1.5"${dash?' stroke-dasharray="5 3"':''}/>`;
+ const hot=Math.max(hz[0][1],hz[1][1]),sbot=Math.min(sz[0][0],sz[1][0]);
+ const sec=(cx,st,lbl)=>{const cy=140,rb=44,g=(st.Smin+st.Smax)/2,px=Math.max(-6,Math.min(14,g/(y2-y1)*60)),rs=rb-px,col=st.Smin<=-TOL?'#b91c1c':'#d97706',tx=st.Smin>=TOL?LG('зазор','clearance'):st.Smax<=-TOL?LG('натяг','interference'):LG('переходная','transition');
+  return `<circle cx="${cx}" cy="${cy}" r="62" fill="url(#ht)" stroke="currentColor"/><circle cx="${cx}" cy="${cy}" r="${rb}" fill="var(--bg)" stroke="#1f6feb" stroke-width="2"/>
+  <circle cx="${cx}" cy="${cy}" r="${rs}" fill="${col}" fill-opacity=".45" stroke="${col}" stroke-width="2"/>
+  <text x="${cx}" y="${cy+4}" font-size="12" text-anchor="middle" fill="currentColor">${LG('вал d','shaft d')}</text><text x="${cx}" y="${cy-rb-6}" font-size="11" text-anchor="middle" fill="currentColor">${LG('отв. D','hole D')}</text>
+  <text x="${cx}" y="${cy+82}" font-size="13" font-weight="600" text-anchor="middle" fill="currentColor">${lbl}</text><text x="${cx}" y="${cy+97}" font-size="11" text-anchor="middle" fill="${col}">${tx}</text>`};
+ return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${LG('Сечения и поля допусков','Cross-sections and tolerance zones')}"><defs><pattern id="ht" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="6" stroke="currentColor" stroke-width="1" opacity=".35"/></pattern></defs>
+ ${sec(72,a,'20 °C')}${sec(212,b,T+' °C')}
+ <text x="142" y="${H-6}" font-size="11" text-anchor="middle" fill="currentColor">${LG('поперечные сечения (зазор условно увеличен)','cross-sections (gap exaggerated)')}</text>
+ <rect x="${hx}" y="${Tp}" width="${zw}" height="${Math.max(Y(hot)-Tp,0)}" fill="url(#ht)"/><rect x="${sx}" y="${Y(sbot)}" width="${zw}" height="${Math.max(H-Bm-Y(sbot),0)}" fill="url(#ht)"/>
+ ${rect(hx,hz[0],'#1f6feb')}${rect(sx,sz[0],'#d97706')}${rect(hx,hz[1],'#1f6feb',1)}${rect(sx,sz[1],'#d97706',1)}
+ <line x1="${hx-30}" x2="${sx+zw+60}" y1="${Y(0)}" y2="${Y(0)}" stroke="currentColor" stroke-width="1.5"/>
+ <text x="${sx+zw+64}" y="${Y(0)+4}" font-size="11" fill="currentColor">0 = D ${P.dH} ${LG('мм','mm')}</text>
+ <text x="${hx-4}" y="${Y(hz[0][1])-3}" font-size="11" text-anchor="end" fill="currentColor">ES ${sg(hz[0][1])}</text><text x="${hx-4}" y="${Y(hz[0][0])+11}" font-size="11" text-anchor="end" fill="currentColor">EI ${sg(hz[0][0])}</text>
+ <text x="${sx+zw+4}" y="${Y(sz[0][1])-3}" font-size="11" fill="currentColor">es ${sg(sz[0][1])}</text><text x="${sx+zw+4}" y="${Y(sz[0][0])+11}" font-size="11" fill="currentColor">ei ${sg(sz[0][0])}</text>
+ <text x="${hx+zw/2}" y="${H-Bm+16}" font-size="12" text-anchor="middle" fill="#1f6feb">${LG('Отверстие','Hole')} ${esc(hD)}</text><text x="${sx+zw/2}" y="${H-Bm+16}" font-size="12" text-anchor="middle" fill="#d97706">${LG('Вал','Shaft')} ${esc(sD)}</text>
+ <text x="${(hx+sx+zw)/2}" y="${H-6}" font-size="11" text-anchor="middle" fill="currentColor">${LG(`сплошные - поля допусков при 20 °C, пунктир - при ${T} °C; мкм`,`solid - tolerance zones at 20 °C, dashed - at ${T} °C; µm`)}</text></svg>`}
+
+// ---------- напряжения (Ляме) ----------
+const brittle=m=>m.fric=='CI'||m.fric=='CER'||/Графит/.test(m.name);
+const KR={STEEL_H:.11,STEEL_S:.11,SS_A:.13,SS_M:.12,CI:.08,BRZ:.2,BRS:.2,CU:.2,AL:.3,AL_AN:.3,TI:.15,PL_SL:.45,PL:.45,CER:.02};
+const KE={STEEL_H:.04,STEEL_S:.04,SS_A:.05,SS_M:.04,CI:.05,BRZ:.05,BRS:.05,CU:.05,AL:.05,AL_AN:.05,TI:.05,PL_SL:.3,PL:.3,CER:.01};
+const der=(k,T)=>Math.max(.05,Math.min(1,1-k*(T-20)/100)),Eof=(m,T)=>m.tE?interp(m.tE,T)*1000:m.E*1000*der(KE[m.fric]??.05,T),Rof=(m,T)=>m.tR?interp(m.tR,T):m.Rp*der(KR[m.fric]??.15,T),srcTxt=m=>'E - '+(m.tE?LG('таблица','table'):LG('оценка','estimate'))+', Rp - '+(m.tR?LG('таблица','table'):LG('оценка','estimate'))+', '+LG('КТР','CTE')+' - '+(m.tA?LG('таблица','table'):LG('модель','model'));
+function lame(P,T,s){const d=(P.dS+P.dH)/2,Do=P.Do,di=P.di,Eh=Eof(P.mh,T),Es=Eof(P.ms,T),vh=P.mh.nu,vs=P.ms.nu;
+ const k=(1/Eh)*((Do*Do+d*d)/(Do*Do-d*d)+vh)+(1/Es)*((d*d+di*di)/(d*d-di*di)-vs),vm=(x,y)=>Math.sqrt(x*x+y*y-x*y);
+ const one=dl=>{if(dl<=1e-9)return null;const p=dl/(d*k),th=p*(Do*Do+d*d)/(Do*Do-d*d),ts=p*(d*d+di*di)/(d*d-di*di);
+  return{dl:dl*1000,p,vh:vm(th,-p),vs:Math.max(vm(-ts,-p),di>0?2*p*d*d/(d*d-di*di):0)}};
+ return{max:one(-s.Smin/1000),min:one(-s.Smax/1000),Rh:Rof(P.mh,T),Rs:Rof(P.ms,T)}}
+function chk(s,R,br,n){const k=R/s;return s<=0.8*R?['g',LG(`${n}: ${s.toFixed(0)} МПа - в зоне упругой деформации (запас ${k.toFixed(2)}).`,`${n}: ${s.toFixed(0)} MPa - within the elastic range (safety factor ${k.toFixed(2)}).`)]:s<=R?['a',LG(`${n}: ${s.toFixed(0)} МПа - упруго, но запас мал (${k.toFixed(2)}).`,`${n}: ${s.toFixed(0)} MPa - elastic, but the margin is small (${k.toFixed(2)}).`)]:['b',LG(`${n}: ${s.toFixed(0)} МПа ПРЕВЫШАЕТ ${br?'предел прочности':'предел текучести'} ${R.toFixed(0)} МПа - ${br?'риск разрушения хрупкого материала':'пластическая деформация'}.`,`${n}: ${s.toFixed(0)} MPa EXCEEDS the ${br?'tensile strength':'yield strength'} ${R.toFixed(0)} MPa - ${br?'risk of fracture of a brittle material':'plastic deformation'}.`)]}
+function stressBlock(P,a,b,T){
+ if([P.ms,P.mh].some(m=>m.E==null||m.Rp==null||m.nu==null))return '<div class="w a">'+LG('Для одного из материалов в библиотеке нет E, ню или Rp - напряжения не рассчитаны.','The library has no E, Poisson ratio or Rp for one of the materials - stresses were not calculated.')+'</div>';
+ const c=[lame(P,20,a),lame(P,T,b)],tt=['20 °C',T+' °C'],bh=brittle(P.mh),bs=brittle(P.ms),f=x=>x.toFixed(0);
+ if(!c[0].max&&!c[1].max)return '<div class="w g">'+LG('Натяга нет ни при 20 °C, ни при '+T+' °C - контактные напряжения не возникают.','No interference at either 20 °C or '+T+' °C - no contact stresses arise.')+'</div>';
+ const cell=(i,fn)=>c[i].max?fn(c[i]):LG('натяга нет','no interference');
+ let t=`<table><tr><th></th><th>20 °C</th><th>${T} °C</th></tr>
+ <tr><td>${LG('Макс. натяг, мкм','Max. interference, µm')}</td><td>${cell(0,x=>x.max.dl.toFixed(1))}</td><td>${cell(1,x=>x.max.dl.toFixed(1))}</td></tr>
+ <tr><td>${LG('Давление на контакте p, МПа','Contact pressure p, MPa')}</td><td>${cell(0,x=>f(x.max.p))}</td><td>${cell(1,x=>f(x.max.p))}</td></tr>
+ <tr><td>${LG('σэкв втулки / предел, МПа','σeq hole part / limit, MPa')}</td><td>${cell(0,x=>f(x.max.vh)+' / '+f(x.Rh))}</td><td>${cell(1,x=>f(x.max.vh)+' / '+f(x.Rh))}</td></tr>
+ <tr><td>${LG('σэкв вала / предел, МПа','σeq shaft / limit, MPa')}</td><td>${cell(0,x=>f(x.max.vs)+' / '+f(x.Rs))}</td><td>${cell(1,x=>f(x.max.vs)+' / '+f(x.Rs))}</td></tr>
+ <tr><td>${LG('p при мин. натяге, МПа','p at min. interference, MPa')}</td><td>${c[0].min?f(c[0].min.p):'-'}</td><td>${c[1].min?f(c[1].min.p):'-'}</td></tr></table>`;
+ for(let i=0;i<2;i++)if(c[i].max){const m=c[i].max;[chk(m.vh,c[i].Rh,bh,tt[i]+LG(', втулка',', hole part')),chk(m.vs,c[i].Rs,bs,tt[i]+LG(', вал',', shaft'))].forEach(r=>t+=`<div class="w ${r[0]}">${esc(r[1])}</div>`)}
+ return t+`<div class="mut">${LG(`Расчёт по Ляме для наибольшего натяга (худший случай), эквивалентные напряжения по Мизесу, плоское напряжённое состояние. Втулка Ø${P.Do} мм, вал ${P.di>0?'полый Ø'+P.di+' мм':'сплошной'}. E и предел текучести при T оценены линейным снижением по классу материала; краевые эффекты, шероховатость и осевые напряжения не учтены. Источники данных: деталь с отверстием - ${srcTxt(P.mh)}; вал - ${srcTxt(P.ms)}.`,`Lamé calculation for the maximum interference (worst case); von Mises equivalent stresses, plane stress. Part with the hole: outer Ø${P.Do} mm; shaft: ${P.di>0?'hollow, bore Ø'+P.di+' mm':'solid'}. E and yield strength at T are estimated by a linear reduction according to the material class; edge effects, roughness and axial stresses are not included. Data sources: part with the hole - ${srcTxt(P.mh)}; shaft - ${srcTxt(P.ms)}.`)}</div>`}
+// ---------- расчёт ----------
+function run(){const o=$('out');try{
+ const P={dS:num('dS',LG('диаметр вала','shaft diameter')),dH:num('dH',LG('диаметр отверстия','hole diameter')),ms:M[$('mS').value],mh:M[$('mH').value]},T=num('T',LG('температура','temperature')),T1=num('T1',LG('начало графика','graph start')),T2=num('T2',LG('конец графика','graph end'));
+ if(!P.ms||!P.mh)throw Error(LG('Выберите материалы','Select the materials'));if(P.dS<=0||P.dH<=0)throw Error(LG('Диаметры должны быть больше нуля','Diameters must be greater than zero'));P.Do=$('Do').value.trim()===''?2*P.dH:num('Do',LG('наружный диаметр втулки','outer diameter of the part with the hole'));P.di=num('di',LG('диаметр отверстия в валу','bore diameter in the shaft'));if(P.Do<=P.dH)throw Error(LG('Наружный диаметр втулки должен быть больше диаметра отверстия','The outer diameter of the part with the hole must exceed the hole diameter'));if(P.di<0||P.di>=P.dS)throw Error(LG('Диаметр отверстия в валу должен быть меньше диаметра вала','The bore diameter in the shaft must be smaller than the shaft diameter'));if(T<=-273.15||T1<=-273.15)throw Error(LG('Температура должна быть выше -273,15 °C','Temperature must be above -273.15 °C'));if(T2<=T1)throw Error(LG('Конец диапазона графика должен быть больше начала','Graph end must be greater than graph start'));
+ let sD,hD;
+ if($('r1').checked){const f=norm($('fit').value),p=f.indexOf('/');if(p<1)throw Error(LG('Посадка задаётся в виде H7/g6','Enter the fit as H7/g6'));if(Math.abs(P.dS-P.dH)>1e-5)throw Error(LG('Для посадки номинальные диаметры вала и отверстия должны совпадать','For a fit the nominal diameters of shaft and hole must match'));
+  const h=parseTol(f.slice(0,p),true),s=parseTol(f.slice(p+1),false);hD=h.des;sD=s.des;[P.hUp,P.hLo]=holeDev(h.des.match(/^[A-Z]+/)[0],+h.des.match(/\d+/)[0],P.dH);[P.sUp,P.sLo]=shaftDev(s.des.match(/^[a-z]+/)[0],+s.des.match(/\d+/)[0],P.dS)}
+ else if($('r2').checked){const h={des:$('hL').value+$('hG').value},s={des:$('sL').value+$('sG').value};hD=h.des;sD=s.des;[P.hUp,P.hLo]=holeDev(h.des.match(/^[A-Z]+/)[0],+h.des.match(/\d+/)[0],P.dH);[P.sUp,P.sLo]=shaftDev(s.des.match(/^[a-z]+/)[0],+s.des.match(/\d+/)[0],P.dS)}
+ else{P.hUp=num('ES','ES');P.hLo=num('EI','EI');P.sUp=num('es','es');P.sLo=num('ei','ei');hD=sD=LG('вручную','manual')}
+ if(P.hUp<P.hLo||P.sUp<P.sLo)throw Error(LG('Верхнее отклонение не может быть меньше нижнего','The upper deviation cannot be smaller than the lower one'));
+ const a=state(P,20),b=state(P,T),f4=x=>x.toFixed(4),W=[],add=(c,t)=>W.push('<div class="w '+c+'">'+esc(t)+'</div>');
+ for(const[m,r]of[[P.ms,LG('вала','shaft')],[P.mh,LG('отверстия','hole')]]){
+  if(T<m.tmin)add('a',LG(`${T} °C НИЖЕ минимальной рабочей температуры материала ${r} (${m.tmin} °C): риск хрупкого разрушения.`,`${T} °C is BELOW the minimum service temperature of the ${r} material (${m.tmin} °C): risk of brittle fracture.`));
+  if(T>m.tmax)add('b',LG(`${T} °C ВЫШЕ максимальной безопасной температуры материала ${r} (${m.tmax} °C).`,`${T} °C is ABOVE the maximum safe temperature of the ${r} material (${m.tmax} °C).`));
+  if(m.tchg!=null){if(T>=m.tchg)add('b',LG(`Материал ${r}: достигнуто ${m.tchg} °C - возможны необратимые изменения свойств (отпуск, перестаривание, стеклование, фазовые переходы).`,`Material of the ${r}: ${m.tchg} °C reached - irreversible property changes are possible (tempering, overaging, glass transition, phase transitions).`));else if(T>=m.tchg-25&&T>20)add('a',LG(`Материал ${r}: температура близка к ${m.tchg} °C, где начинаются изменения свойств.`,`Material of the ${r}: temperature is close to ${m.tchg} °C, where property changes begin.`))}
+  if(T<-100||T>350)add('a',LG(`Материал ${r}: при ${T} °C зависимость КТР(T) - экстраполяция, точность снижена.`,`Material of the ${r}: at ${T} °C the CTE(T) dependence is extrapolated, accuracy is reduced.`));
+  if(m.note)add('',LG(`Материал ${r}: ${ntL(m)}`,`Material of the ${r}: ${ntL(m)}`));for(const[kk,nn]of[['tE','E'],['tR','Rp'],['tA',LG('КТР','CTE')]])if(m[kk]&&(T<m[kk][0][0]||T>m[kk][m[kk].length-1][0]))add('a',LG(`Материал ${r}: ${T} °C вне диапазона таблицы ${nn}(T) - принято значение на границе таблицы.`,`Material of the ${r}: ${T} °C is outside the ${nn}(T) table range - the boundary value was used.`))}
+ if(a.Smin>=TOL&&b.Smin<TOL)add('b',b.Smin<=-TOL?LG(`При ${T} °C зазор исчезает, возникает натяг (min ${fs(b.Smin)} мкм): риск заклинивания и задиров.`,`At ${T} °C the clearance disappears and interference appears (min ${fs(b.Smin)} µm): risk of seizure and galling.`):LG(`При ${T} °C зазор практически выбран (min ${fs(b.Smin)} мкм): риск заклинивания.`,`At ${T} °C the clearance is practically taken up (min ${fs(b.Smin)} µm): risk of seizure.`));
+ if(a.Smax<=-TOL&&b.Smax>-TOL)add('b',LG(`При ${T} °C натяг ослабевает или исчезает (max ${fs(b.Smax)} мкм): возможна потеря фиксации.`,`At ${T} °C the interference weakens or disappears (max ${fs(b.Smax)} µm): the joint may lose its grip.`));
+ if([P.ms,P.mh].some(m=>m.sec=='NM'&&m.a100>=30))add('',LG('КТР полимеров зависит от температуры, влажности и направления (в модели: линейно); результат ориентировочный.','The CTE of polymers depends on temperature, humidity and direction (linear in the model); the result is approximate.'));
+ if(P.ms.pot!=null&&P.mh.pot!=null){const d=Math.abs(P.ms.pot-P.mh.pot);if(d>=0.149){const an=P.ms.pot<P.mh.pot?P.ms:P.mh;add(d>=0.35?'b':'a',LG(`Электрохимическая коррозия при контакте: ${d>=0.35?'ВЫСОКИЙ':'умеренный'} риск (разность потенциалов ~${d.toFixed(2)} В). Анод (корродирует): ${an.name}. Актуально при влаге/электролите.`,`Galvanic corrosion at contact: ${d>=0.35?'HIGH':'moderate'} risk (potential difference ~${d.toFixed(2)} V). Anode (corrodes): ${nameL(an)}. Relevant with moisture/electrolyte.`))}}
+ const[sc,fm]=fric(P.ms,P.mh);add(sc>0?'g':sc<0?'b':'',(sc>0?LG('ХОРОШАЯ фрикционная пара. ','GOOD friction pair. '):sc<0?LG('ПЛОХАЯ фрикционная пара. ','POOR friction pair. '):'')+fm);
+ // температурный диапазон материалов
+ const lo=Math.max(P.ms.tmin,P.mh.tmin),hi=Math.min(P.ms.tmax,P.mh.tmax);
+ const cmin=crossings(P,T1,T2,'Smin'),cmax=crossings(P,T1,T2,'Smax');
+ const cl=(c,n)=>c.length?c.map(x=>`<div class="w a">${n}: ${x.t.toFixed(0)} °C ${LG('(при росте T зазор '+(x.dec?'уменьшается':'увеличивается')+')','(as T rises the clearance '+(x.dec?'decreases':'increases')+')')}</div>`).join(''):`<div class="mut">${n}: ${LG('в диапазоне '+T1+'...'+T2+' °C не пересекает 0.','does not cross 0 in the range '+T1+'...'+T2+' °C.')}</div>`;
+ o.innerHTML=`<table><tr><th>${LG('Вал','Shaft')} d=${P.dS} ${LG('мм','mm')}, ${esc(sD)} (es ${fs(P.sUp)} / ei ${fs(P.sLo)})</th><th></th><th></th></tr>
+ <tr><td colspan=3 class="mut">${esc(nameL(P.ms))} | ${esc(stL(P.ms))}; ${LG('КТР','CTE')}100=${P.ms.a100}, d${LG('КТР','CTE')}=${P.ms.da}</td></tr>
+ <tr><th>${LG('Отверстие','Hole')} D=${P.dH} ${LG('мм','mm')}, ${esc(hD)} (ES ${fs(P.hUp)} / EI ${fs(P.hLo)})</th><th></th><th></th></tr>
+ <tr><td colspan=3 class="mut">${esc(nameL(P.mh))} | ${esc(stL(P.mh))}; ${LG('КТР','CTE')}100=${P.mh.a100}, d${LG('КТР','CTE')}=${P.mh.da}</td></tr>
+ <tr><th></th><th>20 °C</th><th>${T} °C</th></tr>
+ <tr><td>${LG('Отверстие D min, мм','Hole D min, mm')}</td><td>${f4(a.hmin)}</td><td>${f4(b.hmin)}</td></tr><tr><td>${LG('Отверстие D max, мм','Hole D max, mm')}</td><td>${f4(a.hmax)}</td><td>${f4(b.hmax)}</td></tr>
+ <tr><td>${LG('Вал d min, мм','Shaft d min, mm')}</td><td>${f4(a.smin)}</td><td>${f4(b.smin)}</td></tr><tr><td>${LG('Вал d max, мм','Shaft d max, mm')}</td><td>${f4(a.smax)}</td><td>${f4(b.smax)}</td></tr>
+ <tr><td>${LG('Зазор min, мкм (минус = натяг)','Clearance min, µm (minus = interference)')}</td><td>${fs(a.Smin)}</td><td>${fs(b.Smin)}</td></tr><tr><td>${LG('Зазор max, мкм','Clearance max, µm')}</td><td>${fs(a.Smax)}</td><td>${fs(b.Smax)}</td></tr></table>
+ <div class="mut">${LG('Диаметральные значения; радиальный зазор вдвое меньше.','Diametral values; the radial clearance is half as large.')}</div>
+ <div class="v">20 °C: ${verdict(a.Smin,a.Smax)}</div><div class="v">${T} °C: ${verdict(b.Smin,b.Smax)}</div>
+ <h2>${LG('Напряжения при натяге (упругая проверка)','Stresses under interference (elastic check)')}<button class="q" onclick="toggleHelp()" title="${LG('Что и как считается','What is calculated and how')}" aria-label="${LG('Справка','Help')}">?</button></h2><div id="qbox" class="card" style="margin:6px 0"${helpOpen?'':' hidden'}>${HELP()}</div>${stressBlock(P,a,b,T)}<h2>${LG('Схема и поля допусков','Diagram and tolerance zones')}</h2>${schema(P,T,hD,sD,b)}<h2>${LG('Графики и характерные температуры','Graph and characteristic temperatures')}</h2>${chart(P,T,T1,T2,lo,hi)}${cl(cmin,LG('Минимальный зазор = 0 при','Minimum clearance = 0 at'))}${cl(cmax,LG('Максимальный зазор = 0 при','Maximum clearance = 0 at'))}
+ <h2>${LG('Предупреждения','Warnings')}</h2>${W.join('')}`
+ }catch(e){o.innerHTML='<div class="w b">'+esc(e.message)+'</div>'}}
+function chart(P,T,T1,T2,lo,hi){const W=640,H=300,L=52,R=10,Tp=10,B=34,N=160,pts=[];
+ for(let i=0;i<=N;i++){const t=T1+(T2-T1)*i/N,s=state(P,t);pts.push([t,s.Smin,s.Smax])}
+ let y1=Math.min(0,...pts.map(p=>p[1])),y2=Math.max(0,...pts.map(p=>p[2]));const pad=(y2-y1)*0.08||1;y1-=pad;y2+=pad;
+ const X=t=>L+(t-T1)/(T2-T1)*(W-L-R),Y=v=>Tp+(y2-v)/(y2-y1)*(H-Tp-B);
+ const tick=(a,b)=>{const r=(b-a)/6,p=Math.pow(10,Math.floor(Math.log10(r))),s=[1,2,5,10].map(k=>k*p).find(k=>k>=r);const o=[];for(let v=Math.ceil(a/s)*s;v<=b;v+=s)o.push(+v.toFixed(6));return o};
+ let g='';tick(T1,T2).forEach(t=>g+=`<line x1="${X(t)}" x2="${X(t)}" y1="${Tp}" y2="${H-B}" stroke="currentColor" opacity=".12"/><text x="${X(t)}" y="${H-B+14}" font-size="11" text-anchor="middle" fill="currentColor">${t}</text>`);
+ tick(y1,y2).forEach(v=>g+=`<line x1="${L}" x2="${W-R}" y1="${Y(v)}" y2="${Y(v)}" stroke="currentColor" opacity=".12"/><text x="${L-5}" y="${Y(v)+4}" font-size="11" text-anchor="end" fill="currentColor">${v}</text>`);
+ const line=(k,c)=>`<polyline fill="none" stroke="${c}" stroke-width="2" points="${pts.map(p=>X(p[k]===undefined?0:p[0]).toFixed(1)+','+Y(p[k]).toFixed(1)).join(' ')}"/>`;
+ const shade=(a,b)=>b>a?`<rect x="${X(a)}" y="${Tp}" width="${X(b)-X(a)}" height="${H-Tp-B}" fill="#b91c1c" opacity=".08"/>`:'';
+ const cl=v=>Math.min(Math.max(v,T1),T2);
+ return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${LG('Зазор в зависимости от температуры','Clearance versus temperature')}">${g}
+ ${lo>T1?shade(T1,cl(lo)):''}${hi<T2?shade(cl(hi),T2):''}
+ <line x1="${L}" x2="${W-R}" y1="${Y(0)}" y2="${Y(0)}" stroke="currentColor" stroke-width="1.5"/>
+ ${T>=T1&&T<=T2?`<line x1="${X(T)}" x2="${X(T)}" y1="${Tp}" y2="${H-B}" stroke="currentColor" stroke-dasharray="4 3"/>`:''}
+ ${line(1,'#1f6feb')}${line(2,'#d97706')}
+ <text x="${L+6}" y="${Tp+12}" font-size="11" fill="#1f6feb">${LG('зазор min','clearance min')}</text><text x="${L+100}" y="${Tp+12}" font-size="11" fill="#d97706">${LG('зазор max','clearance max')}</text>
+ <text x="${W/2}" y="${H-4}" font-size="11" text-anchor="middle" fill="currentColor">${LG('Температура, °C (красная зона вне безопасного диапазона материалов; пунктир - расчётная T)','Temperature, °C (red zone: outside the safe range of the materials; dashed line: calculation T)')}</text>
+ <text x="12" y="${(Tp+H-B)/2}" font-size="11" text-anchor="middle" fill="currentColor" transform="rotate(-90 12 ${(Tp+H-B)/2})">${LG('Зазор, мкм (ниже 0 - натяг)','Clearance, µm (below 0 = interference)')}</text></svg>`}
+// ---------- интерфейс ----------
+$('go').onclick=run;
+function setLang(l){lang=l;try{localStorage.setItem('tf_lang',l)}catch(e){}const a=$('mS').value,b=$('mH').value;applyLang();rebuild();$('mS').value=a;$('mH').value=b;run()}
+$('lru').onclick=()=>setLang('ru');$('len').onclick=()=>setLang('en');
+
+const saveU=()=>{try{localStorage.setItem('tf_user',JSON.stringify(USER))}catch(x){}};
+const loadF=async ev=>{const fl=[...ev.target.files].filter(f=>/\.txt$/i.test(f.name)&&f.name[0]!='_');for(const f of fl)USER[f.name]=await f.text();saveU();rebuild();run();ev.target.value=''};
+$('ldf').onchange=loadF;$('ldd').onchange=loadF;
+$('rs').onclick=()=>{USER={};try{localStorage.removeItem('tf_user')}catch(x){}rebuild();run()};
+$('tpl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([$('tpl_src').textContent],{type:'text/plain;charset=utf-8'}));a.download='_template.txt';a.click()};
+const HELP_RU=`<div class="hp"><p><b>Что считаем.</b> Если при заданной температуре посадка с натягом (диаметральный натяг δ = −S, где S - зазор), в соединении возникает контактное давление p. Считаем напряжения в детали с отверстием и в вале и сравниваем их с пределом упругости. Размеры берутся с учётом теплового расширения. Расчёт ведётся для наибольшего натяга (худший случай), для наименьшего выводится только давление.</p>
+<p><b>1. Контактное давление (задача Ляме).</b><br><code>p = δ / ( d · [ (1/E<sub>о</sub>)·((D<sub>н</sub>² + d²)/(D<sub>н</sub>² − d²) + ν<sub>о</sub>) + (1/E<sub>в</sub>)·((d² + d<sub>i</sub>²)/(d² − d<sub>i</sub>²) − ν<sub>в</sub>) ] )</code><br>d - диаметр посадки; D<sub>н</sub> - наружный диаметр детали с отверстием; d<sub>i</sub> - диаметр отверстия в валу (0 для сплошного); E, ν - модуль упругости и коэффициент Пуассона (индекс «о» - деталь с отверстием, «в» - вал).</p>
+<p><b>2. Напряжения.</b><br>Деталь с отверстием, у посадочной поверхности: <code>σ<sub>θ</sub> = p·(D<sub>н</sub>² + d²)/(D<sub>н</sub>² − d²)</code> (растяжение), <code>σ<sub>r</sub> = −p</code>.<br>Вал, у посадочной поверхности: <code>σ<sub>θ</sub> = −p·(d² + d<sub>i</sub>²)/(d² − d<sub>i</sub>²)</code>, <code>σ<sub>r</sub> = −p</code>. У внутренней поверхности полого вала: <code>σ<sub>θ</sub> = −2p·d²/(d² − d<sub>i</sub>²)</code>, <code>σ<sub>r</sub> = 0</code>.</p>
+<p><b>3. Эквивалентное напряжение (Мизес).</b> <code>σ<sub>экв</sub> = √(σ<sub>θ</sub>² + σ<sub>r</sub>² − σ<sub>θ</sub>·σ<sub>r</sub>)</code></p>
+<p><b>4. Проверка упругости.</b> Сравниваем σ<sub>экв</sub> с пределом текучести R<sub>p0,2</sub> при данной температуре; запас n = R<sub>p</sub>/σ<sub>экв</sub>. Если σ<sub>экв</sub> ≤ 0,8·R<sub>p</sub> - упруго с запасом; от 0,8 до 1,0·R<sub>p</sub> - упруго, но запас мал; выше R<sub>p</sub> - пластическая деформация. Для хрупких материалов (чугун, керамика, графит) сравнение идёт с пределом прочности, превышение означает риск разрушения.</p>
+<p><b>5. Зависимость от температуры.</b> Размеры: ε = (T − 20)·α<sub>ср</sub>(T); α<sub>ср</sub> берётся из таблицы материала, а если её нет - из модели α<sub>ср</sub> = α<sub>100</sub> − 0,8·dα + dα/100·(T − 20). E и R<sub>p</sub>: из таблиц материала с линейной интерполяцией, а если их нет - линейное снижение по классу материала (в отчёте указано, что использовано).</p>
+<p><b>Допущения и ограничения.</b></p><ul style="margin:4px 0 4px 18px;padding:0"><li>плоское напряжённое состояние (σ<sub>z</sub> = 0), цилиндрические тела, материал изотропный и линейно упругий;</li><li>обе детали равномерно прогреты до одной температуры, градиенты и неодинаковый нагрев не учитываются;</li><li>давление равномерно по длине посадки; краевые эффекты и концентрации напряжений у торцов не учитываются;</li><li>шероховатость не учитывается (она сглаживается при сборке и уменьшает эффективный натяг примерно на 1,2·(Rz<sub>1</sub> + Rz<sub>2</sub>));</li><li>не учитываются осевые усилия, центробежные силы, трение, ползучесть и релаксация (особенно у полимеров), остаточные напряжения после сборки;</li><li>в формулах d принят равным среднему номинальному диаметру посадки;</li><li>значения E, ν и R<sub>p</sub> справочные, у конкретной партии и поставщика отличаются.</li></ul></div>`;
+const HELP_EN=`<div class="hp"><p><b>What is calculated.</b> If at the given temperature the joint is an interference fit (diametral interference δ = −S, where S is the clearance), a contact pressure p arises. The stresses in the part with the hole and in the shaft are calculated and compared with the elastic limit. Sizes include thermal expansion. The calculation is made for the maximum interference (worst case); for the minimum interference only the pressure is shown.</p>
+<p><b>1. Contact pressure (Lamé problem).</b><br><code>p = δ / ( d · [ (1/E<sub>h</sub>)·((D<sub>o</sub>² + d²)/(D<sub>o</sub>² − d²) + ν<sub>h</sub>) + (1/E<sub>s</sub>)·((d² + d<sub>i</sub>²)/(d² − d<sub>i</sub>²) − ν<sub>s</sub>) ] )</code><br>d - fit diameter; D<sub>o</sub> - outer diameter of the part with the hole; d<sub>i</sub> - bore diameter in the shaft (0 for a solid shaft); E, ν - Young's modulus and Poisson's ratio (index "h" - part with the hole, "s" - shaft).</p>
+<p><b>2. Stresses.</b><br>Part with the hole, at the fit surface: <code>σ<sub>θ</sub> = p·(D<sub>o</sub>² + d²)/(D<sub>o</sub>² − d²)</code> (tension), <code>σ<sub>r</sub> = −p</code>.<br>Shaft, at the fit surface: <code>σ<sub>θ</sub> = −p·(d² + d<sub>i</sub>²)/(d² − d<sub>i</sub>²)</code>, <code>σ<sub>r</sub> = −p</code>. At the inner surface of a hollow shaft: <code>σ<sub>θ</sub> = −2p·d²/(d² − d<sub>i</sub>²)</code>, <code>σ<sub>r</sub> = 0</code>.</p>
+<p><b>3. Equivalent stress (von Mises).</b> <code>σ<sub>eq</sub> = √(σ<sub>θ</sub>² + σ<sub>r</sub>² − σ<sub>θ</sub>·σ<sub>r</sub>)</code></p>
+<p><b>4. Elastic check.</b> σ<sub>eq</sub> is compared with the yield strength R<sub>p0.2</sub> at the given temperature; safety factor n = R<sub>p</sub>/σ<sub>eq</sub>. If σ<sub>eq</sub> ≤ 0.8·R<sub>p</sub> - elastic with margin; between 0.8 and 1.0·R<sub>p</sub> - elastic but the margin is small; above R<sub>p</sub> - plastic deformation. For brittle materials (cast iron, ceramics, graphite) the tensile strength is used instead; exceeding it means a risk of fracture.</p>
+<p><b>5. Temperature dependence.</b> Sizes: ε = (T − 20)·α<sub>m</sub>(T); α<sub>m</sub> comes from the material's table, or, if there is none, from the model α<sub>m</sub> = α<sub>100</sub> − 0.8·dα + dα/100·(T − 20). E and R<sub>p</sub>: from the material's tables with linear interpolation, or, if there are none, a linear reduction according to the material class (the report states which was used).</p>
+<p><b>Assumptions and limitations.</b></p><ul style="margin:4px 0 4px 18px;padding:0"><li>plane stress (σ<sub>z</sub> = 0), cylindrical bodies, isotropic linearly elastic material;</li><li>both parts are uniformly heated to the same temperature; gradients and unequal heating are ignored;</li><li>the pressure is uniform along the fit length; edge effects and stress concentrations at the ends are ignored;</li><li>roughness is ignored (it is smoothed out during assembly and reduces the effective interference by about 1.2·(Rz<sub>1</sub> + Rz<sub>2</sub>));</li><li>axial loads, centrifugal forces, friction, creep and relaxation (especially of polymers) and residual stresses after assembly are ignored;</li><li>d in the formulas is the mean nominal fit diameter;</li><li>E, ν and R<sub>p</sub> are handbook values and differ between batches and suppliers.</li></ul></div>`;
+const HELP=()=>lang=='en'?HELP_EN:HELP_RU;
+
+function toggleHelp(){helpOpen=!helpOpen;const x=$('qbox');if(x)x.hidden=!helpOpen}
+const opt=(id,a,d)=>{$(id).innerHTML=a.map(x=>`<option value="${x[0]}"${x[0]==d?' selected':''}>${x[1]}</option>`).join('')};
+const grd=[5,6,7,8,9,10,11,12].map(g=>[g,'IT'+g]);
+opt('hL','C D E F G H JS K M N P R S'.split(' ').map(x=>[x,x]),'H');opt('hG',grd,7);
+opt('sL','c d e f g h js k m n p r s'.split(' ').map(x=>[x,x]),'g');opt('sG',grd,6);
+const setv=(id,v)=>{$(id).value=typeof v=='number'?String(+v.toFixed(2)):v};
+function applyDes(hl,hg,sl,sg){const h=holeDev(hl,hg,num('dH',LG('диаметр отверстия','hole diameter'))),s=shaftDev(sl,sg,num('dS',LG('диаметр вала','shaft diameter')));setv('ES',h[0]);setv('EI',h[1]);setv('es',s[0]);setv('ei',s[1])}
+function sync(src){try{let hl,hg,sl,sg;
+ if(src=='fit'){const f=norm($('fit').value),p=f.indexOf('/');if(p<1)return;const h=parseTol(f.slice(0,p),true),s=parseTol(f.slice(p+1),false);hl=h.l;hg=h.g;sl=s.l;sg=s.g;
+  if(![...$('hL').options].some(o=>o.value==hl)||![...$('sL').options].some(o=>o.value==sl))return;
+  $('hL').value=hl;$('hG').value=hg;$('sL').value=sl;$('sG').value=sg}
+ else{hl=$('hL').value;hg=+$('hG').value;sl=$('sL').value;sg=+$('sG').value;$('fit').value=hl+hg+'/'+sl+sg}
+ applyDes(hl,hg,sl,sg)}catch(e){}}
+function setMode(){const m=$('r1').checked?1:$('r2').checked?2:3;
+ $('fit').disabled=m!=1;['hL','hG','sL','sG'].forEach(i=>$(i).disabled=m!=2);['ES','EI','es','ei'].forEach(i=>$(i).disabled=m!=3);return m}
+['r1','r2','r3'].forEach(i=>$(i).onchange=()=>{const m=setMode();if(m==1)sync('fit');if(m==2)sync('sep')});
+$('fit').oninput=()=>sync('fit');['hL','hG','sL','sG'].forEach(i=>$(i).onchange=()=>sync('sep'));
+['dS','dH'].forEach(i=>$(i).oninput=()=>{const m=setMode();if(m==1){$(i=='dS'?'dH':'dS').value=$(i).value;sync('fit')}else if(m==2)sync('sep')});
+applyLang();rebuild();setMode();sync('fit');run();
+</script></body></html>
