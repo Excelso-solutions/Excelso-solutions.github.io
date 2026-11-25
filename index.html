@@ -1080,71 +1080,69 @@ function markdownToText(text) {
 }
 
 
+
 // Extract macro title from the first H1 heading.
 
-function extractMacroTitle(markdown, fallback) {
+function extractMacroTitle(markdown) {
 
     const match = markdown.match(/^#\s+(.+)$/m);
 
     return match
         ? markdownToText(match[1])
-        : fallback;
+        : "Untitled SolidWorks Macro";
 }
 
 
-// Extract the first paragraph from Overview,
-// Description, Summary or the beginning of README.
+// Extract only the first paragraph after the first H2 heading.
 
 function extractMacroDescription(markdown) {
 
     const lines = markdown.split(/\r?\n/);
 
-    let start = lines.findIndex(line =>
-        /^##\s+(overview|description|summary|purpose)\s*$/i.test(line.trim())
+    const headingIndex = lines.findIndex(line =>
+        /^##\s+/.test(line.trim())
     );
 
-    if (start === -1) {
-        start = lines.findIndex(line => /^#\s+/.test(line.trim()));
+    if (headingIndex === -1) {
+        return "Description is being prepared and will be available soon.";
     }
 
-    start = start < 0 ? 0 : start + 1;
-
     const paragraph = [];
-    let started = false;
 
-    for (let i = start; i < lines.length; i++) {
+    for (let i = headingIndex + 1; i < lines.length; i++) {
 
         const line = lines[i].trim();
 
-        if (/^#{1,6}\s/.test(line)) {
+        // Skip empty lines before the paragraph.
+
+        if (!line && paragraph.length === 0) {
+            continue;
+        }
+
+        // Stop at the next empty line or heading.
+
+        if (!line || /^#{1,6}\s/.test(line)) {
             break;
         }
 
-        if (!line) {
-            if (started) break;
+        // Ignore images and badges.
+
+        if (/^!\[/.test(line) || /^\[!\[/.test(line)) {
             continue;
         }
 
-        // Skip badges and standalone images.
-
-        if (/^!\[/.test(line) || /^<img/i.test(line)) {
-            continue;
-        }
-
-        if (/^\[!\[/.test(line)) {
-            continue;
-        }
-
-        started = true;
         paragraph.push(line);
     }
 
     const description = markdownToText(paragraph.join(" "));
 
-    return description
-        ? description.slice(0, 280) +
-            (description.length > 280 ? "..." : "")
-        : "Open this folder to view macro documentation and files.";
+    if (!description) {
+        return "Description is being prepared and will be available soon.";
+    }
+
+    return description.length > 280
+        ? description.slice(0, 277) + "..."
+        : description;
 }
 
 
@@ -1313,11 +1311,13 @@ async function loadMacro(folder) {
 
     return {
 
-        title: extractMacroTitle(markdown, folder.name),
+       title: markdown
+    ? extractMacroTitle(markdown)
+    : folder.name,
 
-        description: markdown
-            ? extractMacroDescription(markdown)
-            : "README.md is not available yet.",
+description: markdown
+    ? extractMacroDescription(markdown)
+    : "Description is being prepared and will be available soon.",
 
         image: image,
 
