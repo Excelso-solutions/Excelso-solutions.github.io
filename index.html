@@ -306,6 +306,87 @@
             margin-top: 25px;
         }
 
+/* SOLIDWORKS MACRO CATALOG */
+
+.macro-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+    margin-top: 35px;
+}
+
+.macro-card {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    transition: transform 0.25s, border-color 0.25s;
+}
+
+.macro-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--primary);
+}
+
+.macro-preview {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    background: var(--surface-light);
+    overflow: hidden;
+}
+
+.macro-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.macro-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #55dafa;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+}
+
+.macro-card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 24px;
+}
+
+.macro-card h3 {
+    color: white;
+    margin: 0 0 12px;
+    font-size: 1.3rem;
+}
+
+.macro-card p {
+    color: #bbb;
+    line-height: 1.6;
+    margin: 0 0 22px;
+}
+
+.macro-card .tool-actions {
+    margin-top: auto;
+}
+
+.macro-status {
+    color: #999;
+    margin-top: 20px;
+}
+
+@media (max-width: 700px) {
+    .macro-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
         /* CONTACT */
 
         .contact-footer {
@@ -874,44 +955,26 @@ Each tool is available online and can also be downloaded as a standalone HTML fi
 
     <!-- ==================== SOLIDWORKS MACROS ==================== -->
 
-    <section class="project" id="solidworks-macros">
-        <h2>9. SolidWorks Macros</h2>
+   <section class="project" id="solidworks-macros">
 
-        <p class="description">
-A collection of SolidWorks automation tools developed to simplify repetitive CAD operations and improve engineering workflow efficiency.
+    <h2>9. SolidWorks Macros</h2>
 
-The repository provides compiled macro files and editable VBA source code, together with documentation and usage examples.
-        </p>
+    <p class="description">
+        A collection of SolidWorks automation tools developed
+        to simplify repetitive CAD operations and improve
+        engineering workflow efficiency.
 
-        <div class="macro-panel">
+        Each macro is published with its compiled version,
+        editable VBA source code, documentation and examples.
+    </p>
 
-            <h3>SolidWorks Macro Repository</h3>
+    <div id="macro-status" class="macro-status">
+        Loading SolidWorks macros...
+    </div>
 
-            <p>
-                Each macro is published with its source code, compiled version,
-                description, requirements and usage instructions.
-            </p>
+    <div id="macro-grid" class="macro-grid"></div>
 
-            <ul>
-                <li>Compiled SolidWorks macros (.swp)</li>
-                <li>Editable VBA source code (.bas)</li>
-                <li>Usage instructions and technical documentation</li>
-                <li>Examples and screenshots</li>
-            </ul>
-
-            <div class="macro-links">
-
-                <a class="tool-button primary"
-                   href="https://github.com/Excelso-solutions/SolidWorks-Macros"
-                   target="_blank"
-                   rel="noopener">
-                    Browse SolidWorks Macros
-                </a>
-
-            </div>
-
-        </div>
-    </section>
+</section>
 
     <!-- ==================== CONTACT ==================== -->
 
@@ -966,6 +1029,384 @@ The repository provides compiled macro files and editable VBA source code, toget
         tocList.appendChild(li);
     });
 </script>
+
+/* ==================== SOLIDWORKS MACRO CATALOG ==================== */
+
+const MACRO_API =
+    "https://api.github.com/repos/Excelso-solutions/SolidWorks-Macros/contents/macros?ref=main";
+
+const macroGrid = document.getElementById("macro-grid");
+const macroStatus = document.getElementById("macro-status");
+
+
+async function fetchGitHubJSON(url) {
+
+    const response = await fetch(url, {
+        headers: {
+            "Accept": "application/vnd.github+json"
+        }
+    });
+
+    if (!response.ok) {
+        throw new Error("GitHub API error: " + response.status);
+    }
+
+    return await response.json();
+}
+
+
+// Convert a short Markdown fragment to plain text.
+// README content is displayed as text, not executed as HTML.
+
+function markdownToText(text) {
+
+    return text
+        .replace(/!\[[^\]]*\]\([^)]+\)/g, "")
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+        .replace(/<[^>]*>/g, "")
+        .replace(/[`*_~>#]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+}
+
+
+// Extract macro title from the first H1 heading.
+
+function extractMacroTitle(markdown, fallback) {
+
+    const match = markdown.match(/^#\s+(.+)$/m);
+
+    return match
+        ? markdownToText(match[1])
+        : fallback;
+}
+
+
+// Extract the first paragraph from Overview,
+// Description, Summary or the beginning of README.
+
+function extractMacroDescription(markdown) {
+
+    const lines = markdown.split(/\r?\n/);
+
+    let start = lines.findIndex(line =>
+        /^##\s+(overview|description|summary|purpose)\s*$/i.test(line.trim())
+    );
+
+    if (start === -1) {
+        start = lines.findIndex(line => /^#\s+/.test(line.trim()));
+    }
+
+    start = start < 0 ? 0 : start + 1;
+
+    const paragraph = [];
+    let started = false;
+
+    for (let i = start; i < lines.length; i++) {
+
+        const line = lines[i].trim();
+
+        if (/^#{1,6}\s/.test(line)) {
+            break;
+        }
+
+        if (!line) {
+            if (started) break;
+            continue;
+        }
+
+        // Skip badges and standalone images.
+
+        if (/^!\[/.test(line) || /^<img/i.test(line)) {
+            continue;
+        }
+
+        if (/^\[!\[/.test(line)) {
+            continue;
+        }
+
+        started = true;
+        paragraph.push(line);
+    }
+
+    const description = markdownToText(paragraph.join(" "));
+
+    return description
+        ? description.slice(0, 280) +
+            (description.length > 280 ? "..." : "")
+        : "Open this folder to view macro documentation and files.";
+}
+
+
+// Find a suitable image in a directory listing.
+
+function findBestImage(files) {
+
+    const images = files.filter(file =>
+        file.type === "file" &&
+        /\.(png|jpe?g|webp|gif)$/i.test(file.name)
+    );
+
+    if (!images.length) return null;
+
+    // Prefer cover, preview, thumbnail or main.
+
+    const preferred = images.find(file =>
+        /^(cover|preview|thumbnail|main)([-_.]|$)/i.test(file.name)
+    );
+
+    if (preferred) return preferred;
+
+    // Otherwise use the first image alphabetically.
+
+    images.sort((a, b) =>
+        a.name.localeCompare(b.name)
+    );
+
+    return images[0];
+}
+
+
+// Find a cover image in the macro folder.
+// First check the root, then images / screenshots / media.
+
+async function findMacroImage(folderFiles) {
+
+    const rootImage = findBestImage(folderFiles);
+
+    if (rootImage) {
+        return rootImage.download_url;
+    }
+
+    const imageFolders = folderFiles.filter(file =>
+        file.type === "dir" &&
+        /^(images|image|screenshots|media)$/i.test(file.name)
+    );
+
+    for (const imageFolder of imageFolders) {
+
+        try {
+
+            const nestedFiles = await fetchGitHubJSON(imageFolder.url);
+
+            const image = findBestImage(nestedFiles);
+
+            if (image) {
+                return image.download_url;
+            }
+
+        } catch (error) {
+
+            console.warn(
+                "Could not read image folder:",
+                imageFolder.name,
+                error
+            );
+
+        }
+    }
+
+    return null;
+}
+
+
+// Create one macro card.
+
+function createMacroCard(macro) {
+
+    const article = document.createElement("article");
+    article.className = "macro-card";
+
+    const preview = document.createElement("div");
+    preview.className = "macro-preview";
+
+    if (macro.image) {
+
+        const img = document.createElement("img");
+
+        img.src = macro.image;
+        img.alt = macro.title;
+        img.loading = "lazy";
+
+        img.onerror = () => {
+            preview.innerHTML = "";
+            preview.classList.add("macro-placeholder");
+            preview.textContent = "SOLIDWORKS MACRO";
+        };
+
+        preview.appendChild(img);
+
+    } else {
+
+        preview.classList.add("macro-placeholder");
+        preview.textContent = "SOLIDWORKS MACRO";
+
+    }
+
+    const content = document.createElement("div");
+    content.className = "macro-card-content";
+
+    const title = document.createElement("h3");
+    title.textContent = macro.title;
+
+    const description = document.createElement("p");
+    description.textContent = macro.description;
+
+    const actions = document.createElement("div");
+    actions.className = "tool-actions";
+
+    const button = document.createElement("a");
+
+    button.className = "tool-button primary";
+    button.href = macro.url;
+    button.target = "_blank";
+    button.rel = "noopener";
+    button.textContent = "View Macro";
+
+    actions.appendChild(button);
+
+    content.appendChild(title);
+    content.appendChild(description);
+    content.appendChild(actions);
+
+    article.appendChild(preview);
+    article.appendChild(content);
+
+    return article;
+}
+
+
+// Load one macro folder.
+
+async function loadMacro(folder) {
+
+    const files = await fetchGitHubJSON(folder.url);
+
+    const readme = files.find(file =>
+        file.type === "file" &&
+        /^readme\.md$/i.test(file.name)
+    );
+
+    let markdown = "";
+
+    if (readme && readme.download_url) {
+
+        const response = await fetch(readme.download_url);
+
+        if (response.ok) {
+            markdown = await response.text();
+        }
+
+    }
+
+    const image = await findMacroImage(files);
+
+    return {
+
+        title: extractMacroTitle(markdown, folder.name),
+
+        description: markdown
+            ? extractMacroDescription(markdown)
+            : "README.md is not available yet.",
+
+        image: image,
+
+        url: folder.html_url ||
+            "https://github.com/Excelso-solutions/SolidWorks-Macros/tree/main/macros/" +
+            encodeURIComponent(folder.name)
+
+    };
+
+}
+
+
+// Load all macro folders.
+
+async function loadMacroCatalog() {
+
+    try {
+
+        const folders = await fetchGitHubJSON(MACRO_API);
+
+        const macroFolders = folders
+            .filter(item => item.type === "dir")
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+        if (!macroFolders.length) {
+
+            macroStatus.textContent =
+                "No macro folders found.";
+
+            return;
+
+        }
+
+        const results = await Promise.all(
+            macroFolders.map(async folder => {
+
+                try {
+                    return await loadMacro(folder);
+                } catch (error) {
+
+                    console.error(
+                        "Could not load macro:",
+                        folder.name,
+                        error
+                    );
+
+                    return {
+
+                        title: folder.name,
+
+                        description:
+                            "Could not load macro documentation.",
+
+                        image: null,
+
+                        url: folder.html_url
+
+                    };
+
+                }
+
+            })
+        );
+
+        results.forEach(macro => {
+
+            macroGrid.appendChild(
+                createMacroCard(macro)
+            );
+
+        });
+
+        macroStatus.textContent =
+            results.length + " macro(s) available.";
+
+    } catch (error) {
+
+        console.error("Macro catalog error:", error);
+
+        macroStatus.textContent =
+            "Unable to load the macro catalog. Please visit the GitHub repository.";
+
+        const fallback = document.createElement("a");
+
+        fallback.href =
+            "https://github.com/Excelso-solutions/SolidWorks-Macros/tree/main/macros";
+
+        fallback.target = "_blank";
+        fallback.rel = "noopener";
+        fallback.textContent = "Open macro repository";
+
+        macroStatus.appendChild(document.createTextNode(" "));
+        macroStatus.appendChild(fallback);
+
+    }
+
+}
+
+loadMacroCatalog();
 
 </body>
 </html>
